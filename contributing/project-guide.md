@@ -15,147 +15,130 @@ parent: Contributing
 ## Directory Structure
 
 ```
-Philly/
- ├── src/
- │    ├── Container/
- │    │    └── Container.php
- │    ├── Contracts/
- │    │    ├── Container/
- │    │    │    └── Container.php
- │    │    └── App.php
- │    └── App.php
- ├── test/
- │    ├── Unit/
- │    │    ├── Container/
- │    │    │    └── ContainerTest.php
- │    │    └── AppTest.php
- │    ├── TestClass.php
- │    └── TestInterface.php
- └── composer.json
+philly-framework/base/
+ ├── modules/
+ │    ├── Collection/
+ │    │    ├── src/
+ │    │    │    ├── Contracts/
+ │    │    │    │    ├── GenericList.php
+ │    │    │    │    └── ReadonlyList.php
+ │    │    │    └── ArrayList.php
+ │    │    ├── test/
+ │    │    │    └── ArrayListTest.php
+ │    │    └── composer.json
+ │    ├── DI/...
+ │    ├── Http/...
+ │    ├── Support/...
+ │    └── Text/...
+ ├── composer.json
+ ├── infection.json
+ ├── phpunit.xml.dist
+ └── psalm.xml
 ```
 
-The directory structure should be familiar if you ever worked on PHP projects before.
-There are three main folders at the top-level:
+The `base` repository contains all the source code for the Philly framework. It is organized in modules, which are 
+sub-directories of the repository root. Each module contains a `src` and a `test` directory, which contain the source 
+code and the unit tests for it, respectively. Each module also contains a `composer.json`, which allows each module to
+be published on packagist.org independently.
 
-- `src`: Houses all the source code for the framework.
-- `test`: Contains the source code of all tests.
+## Development Environment Setup
 
-There are also a lot of other files at the top-level, but they are not important right now.
-The only file you should look into is the `composer.json`.
-It declares where the autoloader (and you) should look when encountering an unloaded class:
+To set up your local environment, you need to have the following:
 
-```json
-...
-  "autoload": {
-    "psr-4": {
-      "Philly\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "test\\Philly\\": "test"
-    }
-  },
-...
+- A working version of [PHP 8.1](https://qa.php.net/)
+- A text editor (preferably something like [PhpStorm](https://www.jetbrains.com/phpstorm/) or [VS Code](https://code.visualstudio.com/))
+- A working [Composer](https://getcomposer.org/) installation or `composer.phar` in your `PATH`
+- A configured [Git](https://git-scm.com/) client
+
+```bash
+# clone the sources
+$ git clone git@github.com:philly-framework/base.git # or git clone https://github.com/philly-framework/base.git
+$ cd base
+
+# install dependencies
+$ composer install # php composer.phar install
 ```
 
-As you can see, the files in the `src` folder have the namespace `Philly\` and tests have the namespace `test\Philly\`.
-This part also tells you that Philly uses the [PSR-4](https://www.php-fig.org/psr/psr-4/) autoloading standard to load classes.
-
-## Coding Style
-
-Using a common code style helps to reduce stress levels when reading code from others.
-To work against this, Philly follows the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding style standard.
-Your code doesn't need to be perfect. Most small details get fixed by [StyleCI](#styleci) automatically.
-
-### .editorconfig
-
-This project uses an `.editorconfig` file to establish a common file styling across common IDEs and editors.
-It uses a lot of JetBrains specific tags, so if you are using a JetBrains IDE (like PhpStorm), they will be respected.
-
-### PHP DocBlocks
-
-There are a few tools used by Philly which rely on consistent style and meaningful contents in the documentation blocks.
-Below you can see a valid docblock in Philly source code.
-The most important part is the type-hint when documenting parameters, throw declarations and return types.
-Whenever you can, use PHP 7's type-hints (like in this example).
-
-```php
-     /**
-      * Checks if this container accepts the provided instance as a binding. Throws an exception if the given type is not
-      * acceptable.
-      *
-      * @param mixed $instance The instance to check.
-      *
-      * @throws UnacceptableBindingException If the given type is not acceptable for binding.
-      *
-      * @return object The given instance.
-      */
-     public function verifyAcceptable($instance): object { ... }
-```
-
-It is not always possible to use type-hints to declare the type of variable.
-In this case, please use a docblock so tools like [psalm](https://psalm.dev/) can infer the type from it.
-This example shows how to do an inline-type-hint via a docblock:
-
-```php
-    ...
-    /** @var Foo $foo */
-    $foo = get_foo();
-    ...
-```
+And you're ready to go!
 
 ## Tooling
 
-Philly uses multiple tools to analyze and test the submitted code.
+Philly uses multiple tools to analyze and test the code.
+
+### .editorconfig
+
+This project uses an `.editorconfig` file to establish a common file configurations across common IDEs and editors.
+Namely, these are:
+
+- Charset: UTF-8
+- End of line: LF
+- Insert final newline: true
+- Trim trailing whitespace: true
+
+For `.php`-files:
+- Indentation: tabs
+
+For `.json`-files:
+- Indentation: 4 spaces
+
+No tool enforces these settings, so you can code the way you want to. Please be aware that you might have to adapt your
+code when opening a pull request.
 
 ### PHPUnit & Infection
 
 To execute tests, Philly uses [PHPUnit](https://phpunit.de/).
-Additionally, Philly uses [Infection](https://infection.github.io/) to analyze how effective the tests really are.
 
 To run PHPUnit locally, execute
 
 ```bash
-$ composer run-script test
+$ vendor/bin/phpunit
 ```
 
-or
+or with a specific module to test:
 
 ```bash
-$ vendor/bin/phpunit --configuration=phpunit.xml.dist
+$ vendor/bin/phpunit --testsuite Collection
 ```
 
+Additionally, Philly uses [Infection](https://infection.github.io/) to analyze how effective the tests really are.
 For Infection, execute
 
 ```bash
-$ composer run-script infect
+$ vendor/bin/infection --show-mutations
 ```
 
-or
-
-```bash
-$ vendor/bin/infection --configuration=infection.json.dist
-```
+Infection generates a metric called "Covered Code MSI". This metric needs to be above 90%, meaning at least 90% of the
+code covered by tests should be resistant to mutations. Mutations are small modifications to the tested code, which
+should cause tests to fail. An escaped mutant is a change to the code which was not detected by a failed test.
 
 ### Psalm
 
 The codebase is statically analyzed by [Psalm](https://psalm.dev).
-As stated above, Psalm uses docblocks and type-hints to infer the types of variables and return types of functions.
-This way, it can check for possible errors beforehand, so we can fix them before they even happen.
+Psalm uses docblocks and type-hints to infer the types of variables and return types of functions.
+This way, it can check for possible errors before they even happen.
 
 To execute Psalm locally, run
 
 ```bash
-$ composer run-script stan
+$ vendor/bin/psalm
 ```
 
-or
+Ideally, psalm should report no errors. If it does, please try to refactor the code to fix the errors.
+
+### Code coverage
+
+Once code is pushed to the `main` branch, the code coverage is automatically updated by PHPUnit.
+You can view the coverage report at [philly.ricardoboss.de/coverage/](https://philly.ricardoboss.de/coverage/).
+
+You can also view the coverage report locally by executing
 
 ```bash
-$ vendor/bin/psalm --config=psalm.xml.dist
+$ vendor/bin/phpunit --coverage-html=tmp/coverage/html # you can also specify a testsuite here to only show coverage for that module
 ```
 
-### StyleCI
+and then navigating to the `index.html` within the `tmp/coverage/html` directory.
 
-Philly uses [StyleCI](https://styleci.io) to fix small issues with code styling.
+## What next?
+
+ - [Check the to-do list](https://github.com/philly-framework/base/blob/main/README.md)
+ - [Leave a star](https://github.com/philly-framework/base)

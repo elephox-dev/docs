@@ -41,7 +41,7 @@ You will want to run this command to start watching for file changes and start a
 # *nix systems:
 $ bundle exec jekyll serve --config _config.local.yml
 
-# windows:
+# windows/wsl:
 $ bundle exec jekyll serve --config _config.local.yml --force_polling
 ```
 
