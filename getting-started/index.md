@@ -9,7 +9,4 @@ permalink: /
 
 # Getting Started
 
-You should start by reading the documentation in this order:
-
-1. [Project Overview](/getting-started/project-overview)
-1. [Installation](/getting-started/installation)
+Whoops! You arrived a bit too early. Please come back later, when there is enough to even get started with.
