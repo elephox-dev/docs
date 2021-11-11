@@ -1,9 +1,9 @@
 remote_theme: pmarsceill/just-the-docs
 
-title: Philly
+title: Elephox
 description: Yet another PHP framework.
-domain: philly.ricardoboss.de
-url: "https://philly.ricardoboss.de"
+domain: elephox.dev
+url: "https://elephox.dev"
 
 permalink: pretty
 exclude: ["Gemfile", "Gemfile.lock", "CNAME", ".gitignore"]
@@ -19,11 +19,11 @@ heading_anchors: true
 
 # Aux links for the upper right navigation
 aux_links:
-  "Philly on GitHub":
-    - "https://github.com/philly-framework"
+  "Elephox on GitHub":
+    - "https://github.com/elephox-dev"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2019-2021 Ricardo Boss. Distributed with an <a href=\"https://github.com/philly-framework/base/blob/main/LICENSE.md\">MIT license.</a>"
+footer_content: "Copyright &copy; 2019-2021 Ricardo Boss. Distributed with an <a href=\"https://github.com/elephox-dev/framework/blob/main/LICENSE.md\">MIT license.</a>. Sponsored by <a href=\"https://solbros.net\">solbros.net</a>"
 
 # Footer last edited timestamp
 last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
@@ -32,7 +32,7 @@ last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https:/
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/philly-framework/philly-framework.github.io" # the github URL for your repo
+gh_edit_repository: "https://github.com/elephox-dev/elephox-dev.github.io" # the github URL for your repo
 gh_edit_branch: "main" # the branch that your docs is served from
 gh_edit_source: "/" # the source that your files originate from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
