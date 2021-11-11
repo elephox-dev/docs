@@ -5,7 +5,7 @@ nav_order: 1
 permalink: /home
 ---
 
-# Philly
+# Elephox
 {: .fs-10}
 
 GitHub Source code: [github.com/elephox-dev/framework](https://github.com/elephox-dev/framework)
