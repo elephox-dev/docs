@@ -16,15 +16,15 @@
         d.querySelector("#theme-switcher").addEventListener("click", function () {
             const current_theme = getTheme();
 
-            if (current_theme === null || current_theme === "philly_light")
-                setTheme("philly_dark");
+            if (current_theme === null || current_theme === "elephox_light")
+                setTheme("elephox_dark");
             else
-                setTheme("philly_light");
+                setTheme("elephox_light");
         });
     });
 
     const selected_theme = getTheme();
-    if (selected_theme === null || !['philly_light', 'philly_dark'].includes(selected_theme))
+    if (selected_theme === null || !['elephox_light', 'elephox_dark'].includes(selected_theme))
         return;
 
     setTheme(selected_theme);

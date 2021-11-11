@@ -15,7 +15,7 @@ parent: Contributing
 ## Directory Structure
 
 ```
-philly-framework/base/
+elephox-dev/framework/
  ├── modules/
  │    ├── Collection/
  │    │    ├── src/
@@ -52,7 +52,7 @@ To set up your local environment, you need to have the following:
 
 ```bash
 # clone the sources
-$ git clone git@github.com:philly-framework/base.git # or git clone https://github.com/philly-framework/base.git
+$ git clone git@github.com:elephox-dev/framework.git # or git clone https://github.com/elephox-dev/framework.git
 $ cd base
 
 # install dependencies
@@ -128,7 +128,7 @@ Ideally, psalm should report no errors. If it does, please try to refactor the c
 ### Code coverage
 
 Once code is pushed to the `main` branch, the code coverage is automatically updated by PHPUnit.
-You can view the coverage report at [philly.ricardoboss.de/coverage/](https://philly.ricardoboss.de/coverage/).
+You can view the coverage report at [elephox.dev/coverage/](https://elephox.dev/coverage/).
 
 You can also view the coverage report locally by executing
 
@@ -140,5 +140,5 @@ and then navigating to the `index.html` within the `tmp/coverage/html` directory
 
 ## What next?
 
- - [Check the to-do list](https://github.com/philly-framework/base/blob/main/README.md)
- - [Leave a star](https://github.com/philly-framework/base)
+ - [Check the to-do list](https://github.com/elephox-dev/framework/blob/main/README.md)
+ - [Leave a star](https://github.com/elephox-dev/framework)

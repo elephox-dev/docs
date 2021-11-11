@@ -11,23 +11,17 @@ parent: Contributing
 ### Prerequisites
 
 To preview your changes to the documentation before committing them, you can use jekyll, a static site generator.
-
-You need to have ruby installed in order to use `jekyll` and `bundle`:
+You need to have ruby installed in order to use `bundle`:
 
 ```bash
 # ruby-dev is required to build native headers
 $ sudo apt install ruby-dev ruby-bundler
-```
 
-After you got those, navigate to the `docs/` folder from the main repository:
+# check out the source
+$ git clone git@github.com:elephox-dev/elephox-dev.github.io.git
+$ cd elephox-dev.github.io
 
-```bash
-$ cd docs
-```
-
-Then, run:
-
-```bash
+# install dependencies
 $ bundle install
 ```
 
@@ -46,3 +40,11 @@ $ bundle exec jekyll serve --config _config.local.yml --force_polling
 ```
 
 You can then go to [localhost:4000](http://localhost:4000/) to review your changes.
+
+### Updates
+
+You may need to update the bundle dependencies. You can do this by running:
+
+```bash
+$ bundle update
+```

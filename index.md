@@ -8,6 +8,6 @@ permalink: /home
 # Philly
 {: .fs-10}
 
-GitHub Source code: [github.com/philly-framework/base](https://github.com/philly-framework/base)
+GitHub Source code: [github.com/elephox-dev/framework](https://github.com/elephox-dev/framework)
 
 See [Getting Started](/) to get started with using Philly.
