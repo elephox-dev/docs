@@ -36,10 +36,10 @@ elephox-dev/framework/
  └── psalm.xml
 ```
 
-The `framework` repository contains all the source code for the Elephox framework. It is organized in modules, which are 
-sub-directories of the repository root. Each module contains a `src` and a `test` directory, which contain the source 
-code and the unit tests for it, respectively. Each module also contains a `composer.json`, which allows each module to
-be published on packagist.org independently.
+The `framework` repository contains all the source code for the Elephox framework. It is organized in modules, each of
+which has its own directory within the `modules` folder. Each module contains a `src` and a `test` directory, which
+contain the source code and the unit tests for it, respectively. Each module also contains a `composer.json`, which
+allows each module to be published on [packagist.org](https://packagist.org/?query=elephox) independently.
 
 ## Development Environment Setup
 
