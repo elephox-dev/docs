@@ -36,7 +36,7 @@ elephox-dev/framework/
  └── psalm.xml
 ```
 
-The `base` repository contains all the source code for the Philly framework. It is organized in modules, which are 
+The `framework` repository contains all the source code for the Elephox framework. It is organized in modules, which are 
 sub-directories of the repository root. Each module contains a `src` and a `test` directory, which contain the source 
 code and the unit tests for it, respectively. Each module also contains a `composer.json`, which allows each module to
 be published on packagist.org independently.
@@ -53,7 +53,7 @@ To set up your local environment, you need to have the following:
 ```bash
 # clone the sources
 $ git clone git@github.com:elephox-dev/framework.git # or git clone https://github.com/elephox-dev/framework.git
-$ cd base
+$ cd framework
 
 # install dependencies
 $ composer install # php composer.phar install
@@ -63,7 +63,7 @@ And you're ready to go!
 
 ## Tooling
 
-Philly uses multiple tools to analyze and test the code.
+Elephox uses multiple tools to analyze and test the code.
 
 ### .editorconfig
 
@@ -86,7 +86,7 @@ code when opening a pull request.
 
 ### PHPUnit & Infection
 
-To execute tests, Philly uses [PHPUnit](https://phpunit.de/).
+To execute tests, Elephox uses [PHPUnit](https://phpunit.de/).
 
 To run PHPUnit locally, execute
 
@@ -100,7 +100,7 @@ or with a specific module to test:
 $ vendor/bin/phpunit --testsuite Collection
 ```
 
-Additionally, Philly uses [Infection](https://infection.github.io/) to analyze how effective the tests really are.
+Additionally, Elephox uses [Infection](https://infection.github.io/) to analyze how effective the tests really are.
 For Infection, execute
 
 ```bash

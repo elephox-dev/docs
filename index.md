@@ -10,4 +10,4 @@ permalink: /home
 
 GitHub Source code: [github.com/elephox-dev/framework](https://github.com/elephox-dev/framework)
 
-See [Getting Started](/) to get started with using Philly.
+See [Getting Started](/) to get started with using Elephox.
