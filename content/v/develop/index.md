@@ -1,1 +1,3 @@
-# Elephox develop
+# Elephox
+
+This documentation is for the [`{$branch}` branch](https://github.com/elephox-dev/framework/tree/{$branch}).

@@ -39,7 +39,7 @@ class App implements \Elephox\Core\Contract\App
             return $this->handleAny((string)$request->getUrl(), $pageRenderer);
         }
 
-        $body = $pageRenderer->stream($contentFile);
+        $body = $pageRenderer->stream($contentFile, ['branch' => $templateValues['version']]);
 
         return Response::build()
             ->responseCode(ResponseCode::OK)

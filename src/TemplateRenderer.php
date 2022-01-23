@@ -29,34 +29,46 @@ class TemplateRenderer
     public function renderFile(string $templatePath, array $data): string
     {
         $template = file_get_contents($templatePath);
+        $basePath = dirname($templatePath);
 
-        preg_match_all('/{{\s*(.*?)\s*}}/', $template, $matches);
+        if (array_key_exists('content', $data)) {
+            $data['content'] = $this->insertData($basePath, $data['content'], $data);
+        }
+
+        return $this->insertData($basePath, $template, $data);
+    }
+
+    public function insertData(string $basePath, string $template, array $data): string
+    {
+        preg_match_all('/{\s*(.*?)\s*}/', $template, $matches);
         foreach ($matches[0] as $index => $wrapper) {
-            $content = $matches[1][$index];
+            $templateDirective = $matches[1][$index];
 
-            if (str_starts_with($content, '$')) {
-                $varName = substr($content, 1);
+            if (str_starts_with($templateDirective, '$')) {
+                $varName = substr($templateDirective, 1);
 
                 if (array_key_exists($varName, $data)) {
+                    /** @var string $template */
                     $template = str_replace($wrapper, $data[$varName], $template);
                 } else {
+                    /** @var string $template */
                     $template = str_replace($wrapper, '', $template);
                 }
-            } else if (str_starts_with($content, 'include ')) {
-                $includePath = substr($content, 8);
+            } else if (str_starts_with($templateDirective, 'include ')) {
+                $includePath = substr($templateDirective, 8);
                 if (file_exists($includePath)) {
                     require_once $includePath;
                 }
-            } else if (str_starts_with($content, 'import ')) {
-                $importedPath = Path::join(dirname($templatePath), substr($content, 7));
+            } else if (str_starts_with($templateDirective, 'import ')) {
+                $importedPath = Path::join($basePath, substr($templateDirective, 7));
 
                 $template = str_replace($wrapper, $this->renderFile($importedPath, $data), $template);
-            } else if (str_starts_with($content, 'load ')) {
-                $loadedPath = Path::join(dirname($templatePath), substr($content, 5));
+            } else if (str_starts_with($templateDirective, 'load ')) {
+                $loadedPath = Path::join($basePath, substr($templateDirective, 5));
 
                 array_push($data, ...$this->loadData($loadedPath));
             } else {
-                throw new RuntimeException('Unknown template directive: ' . $content);
+                throw new RuntimeException('Unknown template directive: ' . $templateDirective);
             }
         }
 
