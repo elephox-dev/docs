@@ -28,6 +28,44 @@ main .hero {
 }
 
 .sticky-top {
-	position: sticky;
+	position: static;
 	top: 0;
+}
+
+.grid {
+	display: grid;
+	grid-template: "aside "
+	               "nav   "
+	               "main  "
+	               "footer";
+}
+
+.grid aside {
+	grid-area: aside;
+}
+
+.grid nav {
+	grid-area: nav;
+}
+
+.grid main {
+	grid-area: main;
+	min-width: 0;
+}
+
+.grid footer {
+	grid-area: footer;
+}
+
+@media screen and (min-width: 769px) {
+	.grid {
+		grid-template: "aside   aside " auto
+		               "nav     main  " auto
+		               "space   main  " 1fr
+		               "footer  footer" auto / max-content 1fr;
+	}
+
+	.sticky-top {
+		position: sticky;
+	}
 }

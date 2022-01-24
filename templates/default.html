@@ -7,66 +7,57 @@
 
 	{? import parts/style.html }
 </head>
-<body>
-	<div class="container">
-		<div class="level px-4 my-4">
-			<div class="level-left">
-				<div class="level-item">
-					<img src="/logo.svg" alt="Elephox" id="logo">
-				</div>
-			</div>
-
-			<div class="level-right">
-				<div class="level-item">
-					{? import parts/branches-dropdown.html }
-				</div>
+<body class="container is-desktop grid">
+	<aside class="level px-4 my-4">
+		<div class="level-left">
+			<div class="level-item">
+				<img src="/logo.svg" alt="Elephox" id="logo">
 			</div>
 		</div>
 
-		<div class="columns is-gapless my-0">
-			<div class="column is-narrow py-0">
-				<nav class="menu p-4 has-background-light sticky-top">
-					<p class="menu-label">
-						General
-					</p>
-					<ul class="menu-list">
-						<li><a href="/">Home</a></li>
-						<li><a href="https://github.com/elephox-dev" target="_blank">GitHub</a></li>
-					</ul>
-					<p class="menu-label">
-						Documentation
-					</p>
-					<ul class="menu-list">
-						<li><a href="{? qualify /getting-started }">Getting Started</a></li>
-						<li>
-							<a href="{? qualify /concepts }">Concepts</a>
-							<ul>
-								<li><a href="{? qualify /concepts/collections }">Collections</a></li>
-								<li><a href="{? qualify /concepts/container }">Container</a></li>
-								<li><a href="{? qualify /concepts/contexts-and-handlers }">Contexts & Handlers</a></li>
-							</ul>
-						</li>
-						<li><a href="{? qualify /contributing }">Contributing</a></li>
-					</ul>
-					<hr class="has-background-grey-lighter">
-					<a href="#">Back to top</a>
-				</nav>
-			</div>
-
-			<div class="column py-0">
-				<main class="content p-4">
-					{? $content }
-				</main>
+		<div class="level-right">
+			<div class="level-item has-text-centered">
+				{? import parts/branches-dropdown.html }
 			</div>
 		</div>
+	</aside>
 
-		<footer class="footer">
-			<div class="content">
-				&copy Ricardo Boss 2022.<br>
-				The source code is licensed <a href="https://opensource.org/licenses/mit-license.php">MIT</a>
-			</div>
-		</footer>
-	</div>
+	<nav class="menu p-4 has-background-light sticky-top">
+		<p class="menu-label">
+			General
+		</p>
+		<ul class="menu-list">
+			<li><a href="/">Home</a></li>
+			<li><a href="https://github.com/elephox-dev" target="_blank">GitHub</a></li>
+		</ul>
+		<p class="menu-label">
+			Documentation
+		</p>
+		<ul class="menu-list">
+			<li><a href="{? qualify /getting-started }">Getting Started</a></li>
+			<li>
+				<a href="{? qualify /concepts }">Concepts</a>
+				<ul>
+					<li><a href="{? qualify /concepts/collections }">Collections</a></li>
+					<li><a href="{? qualify /concepts/container }">Container</a></li>
+					<li><a href="{? qualify /concepts/contexts-and-handlers }">Contexts & Handlers</a></li>
+				</ul>
+			</li>
+			<li><a href="{? qualify /contributing }">Contributing</a></li>
+		</ul>
+		<hr class="is-hidden-mobile has-background-grey-lighter">
+		<a class="is-hidden-mobile" href="#">Back to top</a>
+	</nav>
+	<main class="content p-4">
+		{? $content }
+	</main>
+
+	<footer class="footer">
+		<div class="content">
+			&copy Ricardo Boss 2022.<br>
+			The source code is licensed <a href="https://opensource.org/licenses/mit-license.php">MIT</a>
+		</div>
+	</footer>
 
 	{? import parts/script.html }
 </body>
