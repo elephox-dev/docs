@@ -1,50 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	{ import parts/meta.html }
+	{? import parts/meta.html }
 
-	<title>{ $title }</title>
+	<title>{? $title }</title>
 
-	{ import parts/style.html }
+	{? import parts/style.html }
 </head>
 <body>
-	<div>
-		<img src="/logo.svg" alt="Elephox" id="logo">
+	<div class="container">
+		<div class="level px-4 my-4">
+			<div class="level-left">
+				<div class="level-item">
+					<img src="/logo.svg" alt="Elephox" id="logo">
+				</div>
+			</div>
 
-		{ import parts/branches-dropdown.html }
-	</div>
-
-	<div>
-		<nav class="menu">
-			<p class="menu-label">
-				General
-			</p>
-			<ul class="menu-list">
-				<li><a href="/">Home</a></li>
-				<li><a href="https://github.com/elephox-dev">GitHub</a></li>
-			</ul>
-			<p class="menu-label">
-				Documentation
-			</p>
-			<ul class="menu-list">
-				<li><a href="{ qualify /getting-started }">Getting Started</a></li>
-				<li><a href="{ qualify /concepts }">Concepts</a></li>
-				<li><a href="{ qualify /contributing }">Contributing</a></li>
-			</ul>
-		</nav>
-
-		<main>
-			{ $content }
-		</main>
-	</div>
-
-	<footer class="footer">
-		<div class="content">
-			&copy Ricardo Boss 2022.<br>
-			The source code is licensed <a href="https://opensource.org/licenses/mit-license.php">MIT</a>
+			<div class="level-right">
+				<div class="level-item">
+					{? import parts/branches-dropdown.html }
+				</div>
+			</div>
 		</div>
-	</footer>
 
-	{ import parts/script.html }
+		<div class="columns is-gapless my-0">
+			<div class="column is-narrow py-0">
+				<nav class="menu p-4 has-background-light">
+					<p class="menu-label">
+						General
+					</p>
+					<ul class="menu-list">
+						<li><a href="/">Home</a></li>
+						<li><a href="https://github.com/elephox-dev" target="_blank">GitHub</a></li>
+					</ul>
+					<p class="menu-label">
+						Documentation
+					</p>
+					<ul class="menu-list">
+						<li><a href="{? qualify /getting-started }">Getting Started</a></li>
+						<li>
+							<a href="{? qualify /concepts }">Concepts</a>
+							<ul>
+								<li><a href="{? qualify /concepts/collections }">Collections</a></li>
+								<li><a href="{? qualify /concepts/container }">Container</a></li>
+								<li><a href="{? qualify /concepts/contexts-and-handlers }">Contexts & Handlers</a></li>
+							</ul>
+						</li>
+						<li><a href="{? qualify /contributing }">Contributing</a></li>
+					</ul>
+				</nav>
+			</div>
+
+			<div class="column py-0">
+				<main class="p-4">
+				{? $content }
+			</main>
+			</div>
+		</div>
+
+		<footer class="footer">
+			<div class="content">
+				&copy Ricardo Boss 2022.<br>
+				The source code is licensed <a href="https://opensource.org/licenses/mit-license.php">MIT</a>
+			</div>
+		</footer>
+	</div>
+
+	{? import parts/script.html }
 </body>
 </html>

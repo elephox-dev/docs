@@ -4,18 +4,20 @@ declare(strict_types=1);
 namespace Elephox\Docs;
 
 use Elephox\Files\Path;
-use Parsedown;
+use ParsedownExtra;
 
 class ContentFiles
 {
     public function __construct(
-        private Parsedown $parsedown,
+        private ParsedownExtra $parsedown,
         private TemplateRenderer $templateRenderer,
     ) {
     }
 
     public static function findBestFit(string $version, string $path): null|string
     {
+        $path = rtrim($path, '/');
+
         foreach ([
             $version,
             'main',
@@ -23,7 +25,8 @@ class ContentFiles
          ] as $versionDir) {
             foreach ([
                 $path,
-                Path::join($path, "index.md")
+                $path . '.md',
+                Path::join($path, 'index.md')
              ] as $tryFile) {
                 $contentFile = Path::join(__DIR__, "..", "content", "v", $versionDir, $tryFile);
                 if (is_file($contentFile)) {

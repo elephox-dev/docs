@@ -58,7 +58,7 @@ class TemplateRenderer
 
     private function evaluateInternal(string $basePath, string $template, array &$data, array &$loopVars): string
     {
-        preg_match_all('/{\s*(.*?)\s*}/', $template, $matches);
+        preg_match_all('/{\?\s*(.*?)\s*}/', $template, $matches);
         foreach ($matches[0] as $index => $wrapper) {
             /** @var string $wrapper */
 
@@ -69,17 +69,17 @@ class TemplateRenderer
                 $value = $this->getDotPathValue($varPath, $data, $loopVars);
 
                 $template = str_replace($wrapper, $value ?? '', $template);
-            } else if (str_starts_with($templateDirective, 'include ')) {
+            } else if (str_starts_with($templateDirective, 'include')) {
                 $includePath = substr($templateDirective, 8);
                 if (file_exists($includePath)) {
                     require_once $includePath;
                 }
                 $template = str_replace($wrapper, '', $template);
-            } else if (str_starts_with($templateDirective, 'import ')) {
+            } else if (str_starts_with($templateDirective, 'import')) {
                 $importedPath = Path::join($basePath, substr($templateDirective, 7));
 
                 $template = str_replace($wrapper, $this->renderFile($importedPath, $data), $template);
-            } else if (str_starts_with($templateDirective, 'load ')) {
+            } else if (str_starts_with($templateDirective, 'load')) {
                 $loadedPath = Path::join($basePath, substr($templateDirective, 5));
 
                 foreach ($this->loadData($loadedPath) as $key => $value) {
@@ -87,7 +87,7 @@ class TemplateRenderer
                 }
 
                 $template = str_replace($wrapper, '', $template);
-            } else if (str_starts_with($templateDirective, 'qualify ')) {
+            } else if (str_starts_with($templateDirective, 'qualify')) {
                 $urlToQualify = substr($templateDirective, 8);
                 $matchedTemplate = $this->request->getMatchedTemplate();
                 if ($matchedTemplate->has('version')) {
@@ -95,7 +95,7 @@ class TemplateRenderer
                 }
 
                 $template = str_replace($wrapper, $urlToQualify, $template);
-            } else if (str_starts_with($templateDirective, 'set ')) {
+            } else if (str_starts_with($templateDirective, 'set')) {
                 $varAndValue = substr($templateDirective, 4);
                 [$varName, $value] = explode('=', $varAndValue, 2);
                 $varName = trim($varName, '$ ');

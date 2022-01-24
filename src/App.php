@@ -5,21 +5,20 @@ namespace Elephox\Docs;
 
 use Elephox\Core\Handler\Attribute\Http\Any;
 use Elephox\Core\Handler\Attribute\Http\Get;
-use Elephox\Core\Handler\UrlTemplate;
 use Elephox\Core\Registrar;
 use Elephox\Files\Path;
 use Elephox\Http\Contract\Message;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
-use Parsedown;
+use ParsedownExtra;
 
 class App implements \Elephox\Core\Contract\App
 {
     use Registrar;
 
     public $classes = [
-        Parsedown::class,
+        ParsedownExtra::class,
         ContentFiles::class,
         PageRenderer::class,
         TemplateRenderer::class,
