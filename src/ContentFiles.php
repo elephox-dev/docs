@@ -21,9 +21,14 @@ class ContentFiles
             'main',
             'develop'
          ] as $versionDir) {
-            $contentFile = Path::join(__DIR__, "..", "content", "v", $versionDir, empty($path) ? "index.md" : $path);
-            if (file_exists($contentFile)) {
-                return $contentFile;
+            foreach ([
+                $path,
+                Path::join($path, "index.md")
+             ] as $tryFile) {
+                $contentFile = Path::join(__DIR__, "..", "content", "v", $versionDir, $tryFile);
+                if (is_file($contentFile)) {
+                    return $contentFile;
+                }
             }
         }
 
