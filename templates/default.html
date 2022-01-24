@@ -15,11 +15,21 @@
 	</div>
 
 	<div>
-		<nav>
-			<ul>
-				<li>
-					<a href="{ qualify / }">Home</a>
-				</li>
+		<nav class="menu">
+			<p class="menu-label">
+				General
+			</p>
+			<ul class="menu-list">
+				<li><a href="/">Home</a></li>
+				<li><a href="https://github.com/elephox-dev">GitHub</a></li>
+			</ul>
+			<p class="menu-label">
+				Documentation
+			</p>
+			<ul class="menu-list">
+				<li><a href="{ qualify /getting-started }">Getting Started</a></li>
+				<li><a href="{ qualify /concepts }">Concepts</a></li>
+				<li><a href="{ qualify /contributing }">Contributing</a></li>
 			</ul>
 		</nav>
 
@@ -28,8 +38,11 @@
 		</main>
 	</div>
 
-	<footer>
-		&copy Ricardo Boss 2022
+	<footer class="footer">
+		<div class="content">
+			&copy Ricardo Boss 2022.<br>
+			The source code is licensed <a href="https://opensource.org/licenses/mit-license.php">MIT</a>
+		</div>
 	</footer>
 
 	{ import parts/script.html }
