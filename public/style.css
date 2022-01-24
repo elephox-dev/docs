@@ -36,8 +36,7 @@ main .hero {
 	display: grid;
 	grid-template: "aside "
 	               "nav   "
-	               "main  "
-	               "footer";
+	               "main  ";
 }
 
 .grid aside {
@@ -46,6 +45,8 @@ main .hero {
 
 .grid nav {
 	grid-area: nav;
+	overflow-y: auto;
+	max-height: 100vh;
 }
 
 .grid main {
@@ -53,16 +54,11 @@ main .hero {
 	min-width: 0;
 }
 
-.grid footer {
-	grid-area: footer;
-}
-
 @media screen and (min-width: 769px) {
 	.grid {
-		grid-template: "aside   aside " auto
-		               "nav     main  " auto
-		               "space   main  " 1fr
-		               "footer  footer" auto / max-content 1fr;
+		grid-template: "aside   aside   aside " auto
+		               "nav     gap     main  " auto
+		               "space   gap     main  " auto / max-content 1rem auto;
 	}
 
 	.sticky-top {
