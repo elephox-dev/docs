@@ -13,7 +13,7 @@
 
 <article class="message is-info">
   <div class="message-body">
-    Collections are also available as their own independent package: <a href="https://packagist.org/packages/elephox/collections" target="_blank">elephox/collections</a>
+    Collections are also available as their own independent package: <a href="https://packagist.org/packages/elephox/collection" target="_blank">elephox/collection</a>
   </div>
 </article>
 
