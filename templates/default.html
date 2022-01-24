@@ -25,7 +25,7 @@
 
 		<div class="columns is-gapless my-0">
 			<div class="column is-narrow py-0">
-				<nav class="menu p-4 has-background-light">
+				<nav class="menu p-4 has-background-light sticky-top">
 					<p class="menu-label">
 						General
 					</p>
@@ -48,13 +48,15 @@
 						</li>
 						<li><a href="{? qualify /contributing }">Contributing</a></li>
 					</ul>
+					<hr class="has-background-grey-lighter">
+					<a href="#">Back to top</a>
 				</nav>
 			</div>
 
 			<div class="column py-0">
-				<main class="p-4">
-				{? $content }
-			</main>
+				<main class="content p-4">
+					{? $content }
+				</main>
 			</div>
 		</div>
 

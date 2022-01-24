@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a6cbf52b4c6b820225c181dd22c3300",
+    "content-hash": "fc7ce6acfadd280985e3fe57856c04c2",
     "packages": [
         {
             "name": "elephox/framework",
@@ -319,6 +319,60 @@
                 "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.0"
             },
             "time": "2020-11-17T11:09:47+00:00"
+        },
+        {
+            "name": "keinos/parsedown-toc",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KEINOS/parsedown-extension_table-of-contents.git",
+                "reference": "824b3b0b0fea1dd5daf056f3058310f9d4d5b0be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KEINOS/parsedown-extension_table-of-contents/zipball/824b3b0b0fea1dd5daf056f3058310f9d4d5b0be",
+                "reference": "824b3b0b0fea1dd5daf056f3058310f9d4d5b0be",
+                "shasum": ""
+            },
+            "require": {
+                "erusev/parsedown": "^1.7",
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Extension.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KEINOS",
+                    "homepage": "https://github.com/KEINOS",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "CONTRIBUTORS",
+                    "homepage": "https://github.com/KEINOS/parsedown-extension_table-of-contents/graphs/contributors",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "Table of Contents Extension for Parsedown, the Parser for Markdown.",
+            "homepage": "https://github.com/KEINOS/parsedown-extension_table-of-contents/",
+            "keywords": [
+                "extension",
+                "markdown",
+                "parser"
+            ],
+            "support": {
+                "issues": "https://github.com/KEINOS/parsedown-extension_table-of-contents/issues",
+                "source": "https://github.com/KEINOS/parsedown-extension_table-of-contents/tree/master"
+            },
+            "time": "2020-06-27T03:58:36+00:00"
         },
         {
             "name": "psr/container",

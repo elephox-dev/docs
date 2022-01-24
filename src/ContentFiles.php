@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Elephox\Docs;
 
 use Elephox\Files\Path;
-use ParsedownExtra;
+use Parsedown;
 
 class ContentFiles
 {
     public function __construct(
-        private ParsedownExtra $parsedown,
+        private Parsedown $parsedown,
         private TemplateRenderer $templateRenderer,
     ) {
     }

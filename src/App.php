@@ -11,17 +11,25 @@ use Elephox\Http\Contract\Message;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Parsedown;
 use ParsedownExtra;
+use ParsedownToC;
 
 class App implements \Elephox\Core\Contract\App
 {
     use Registrar;
 
     public $classes = [
-        ParsedownExtra::class,
+        ElephoxParsedown::class,
         ContentFiles::class,
         PageRenderer::class,
         TemplateRenderer::class,
+    ];
+
+    public $aliases = [
+        Parsedown::class => ElephoxParsedown::class,
+        ParsedownExtra::class => ElephoxParsedown::class,
+        ParsedownToC::class => ElephoxParsedown::class,
     ];
 
     #[Get('.*', 2)]
