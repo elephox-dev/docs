@@ -14,14 +14,15 @@ class PageRenderer
     {
     }
 
-    public function render(string $contentFilePath, array $data = [], string $template = "default"): string
+    public function render(string $contentFilePath, array $data, string $template = "default"): string
     {
-        $content = $this->contentFileRenderer->render($contentFilePath);
+        $content = $this->contentFileRenderer->render($contentFilePath, $data);
+        $data = array_merge($data, ['content' => $content]);
 
-        return $this->templateRenderer->render($template, array_merge($data, ['content' => $content]));
+        return $this->templateRenderer->render($template, $data);
     }
 
-    public function stream(string $contentFilePath, array $data = [], string $template = "default"): Stream
+    public function stream(string $contentFilePath, array $data, string $template = "default"): Stream
     {
         return new StringStream($this->render($contentFilePath, $data, $template));
     }

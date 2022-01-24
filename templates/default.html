@@ -6,12 +6,32 @@
 	<title>{ $title }</title>
 
 	{ import parts/style.html }
-
-	{ import parts/script.html }
 </head>
 <body>
-	{ $content }
+	<div>
+		<img src="/logo.svg" alt="Elephox" id="logo">
 
-	{ $bottomScripts }
+		{ import parts/branches-dropdown.html }
+	</div>
+
+	<div>
+		<nav>
+			<ul>
+				<li>
+					<a href="{ qualify / }">Home</a>
+				</li>
+			</ul>
+		</nav>
+
+		<main>
+			{ $content }
+		</main>
+	</div>
+
+	<footer>
+		&copy Ricardo Boss 2022
+	</footer>
+
+	{ import parts/script.html }
 </body>
 </html>

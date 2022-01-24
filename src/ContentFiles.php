@@ -10,6 +10,7 @@ class ContentFiles
 {
     public function __construct(
         private Parsedown $parsedown,
+        private TemplateRenderer $templateRenderer,
     ) {
     }
 
@@ -29,10 +30,14 @@ class ContentFiles
         return null;
     }
 
-    public function render(string $contentFilePath): string
+    public function render(string $contentFilePath, array &$data): string
     {
-        $contentFileContent = file_get_contents($contentFilePath);
+        $basePath = dirname($contentFilePath);
 
-        return $this->parsedown->text($contentFileContent);
+        $content = file_get_contents($contentFilePath);
+        $content = $this->templateRenderer->evaluate($basePath, $content, $data);
+        $content = $this->parsedown->text($content);
+
+        return $content;
     }
 }

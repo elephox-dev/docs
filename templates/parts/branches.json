@@ -1,0 +1,12 @@
+{
+    "branches": [
+        {
+            "label": "develop (0.4.x-dev)",
+            "value": "develop"
+        },
+        {
+            "label": "main (1.x-dev)",
+            "value": "main"
+        }
+    ]
+}

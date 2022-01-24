@@ -1,0 +1,11 @@
+{ load branches.json }
+<label>
+	Current branch:
+
+	<select id="branches-select">
+		{ foreach $branches as $branch }
+			<option value="{ $branch.value }">{ $branch.label }</option>
+		{ endforeach }
+		<option value="main">main (1.x-dev)</option>
+	</select>
+</label>

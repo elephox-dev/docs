@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../framework",
-                "reference": "d0adaf11532e130f4575590dd3823fa3d5ce6905"
+                "reference": "7e3e68d4d070cd89167d9ffd075501d8f89a0a38"
             },
             "require": {
                 "ext-mbstring": "*",
