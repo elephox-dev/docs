@@ -53,7 +53,7 @@ It is useful for a lot of scenarios, where you would normally use a native PHP a
 With `KeyedEnumerables`, you have a lot of useful functions for sorting, filtering and mapping than are available with `sort()`, `array_filter()`, `array_map()`, etc.
 You are also more flexible, because it is an object and not a scalar value, meaning you can expand the normal functionality with your business logic.
 
-Current `ArrayList` is the only class implementing `GenericList`.
+Currently `ArrayList` is the only class implementing `GenericList`.
 You are free to implement it yourself and to help you, Elephox provides a trait with only one abstract method for you to implement: [`IsKeyedEnumerable`](#traits).
 
 ## Maps
@@ -129,7 +129,7 @@ $set->removeBy(fn ($v) => str_contains($v, 'o')); // returns true, since at leas
 echo count($set); // echoes '1' (only 'dear' remains in the set)
 ```
 
-Sets are a great way to keep track of a unique list of elements.
+Sets are a great way to keep track of a list of unique elements.
 
 Sets allow you to specify a custom compare function, which determines if two elements should be considered equal:
 
@@ -162,7 +162,7 @@ They provide a lot of functionality by chaining and combining **iterators**.
 
 <article class="message is-info">
   <div class="message-body">
-    An <strong>iterator</strong> is an object which is used by many languages (including PHP) to loop over a collection using while loops.<br>
+    An <strong>iterator</strong> is an object which is used by many languages (including PHP) to loop over a collection using <code>while</code>-loops.<br>
     A <a href="https://www.php.net/manual/en/class.iterator.php" target="_blank">PHP iterator</a> only has a small set of functions:
     <ul>
       <li><code>current()</code>: returns the current value of the iterator</li>
@@ -213,7 +213,7 @@ In fact, a `foreach`-loop can use any object implementing [`Traversable`](https:
 You cannot directly implement `Traversable` though.
 So you need to implement a subtype (`Iterator` or `IteratorAggregate`) to pass the object into a `foreach`-loop.
 
-Enumerables in Elephox all implement the `IteratorAggregate`, meaning they have a method `getIterator()`, which returns an `Interator` for the given enumerable.
+Enumerables in Elephox all implement the `IteratorAggregate`, meaning they have a method - `getIterator()` -, which returns an `Iterator` for the given enumerable.
 The `Enumerable` and `KeyedEnumerable` interfaces use said chaining and combining of iterators to efficiently implement a lot of useful functions.
 
 <article class="message is-success">
@@ -237,7 +237,7 @@ for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
   </div>
 </article>
 
-### The (key) difference
+### The (key-)difference
 
 Elephox differentiates between collections having keys ([maps](#maps) and [lists](#lists)) and collections being keyless ([sets](#sets)).
 
