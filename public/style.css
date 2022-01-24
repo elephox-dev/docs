@@ -21,9 +21,9 @@ a[target="_blank"]::after {
 	font-weight: bold;
 }
 
-main .hero {
+.grid main .hero {
 	margin-top: -1rem;
-	margin-left: -1rem;
+	margin-left: -2rem;
 	margin-right: -1rem;
 }
 
@@ -34,9 +34,9 @@ main .hero {
 
 .grid {
 	display: grid;
-	grid-template: "aside "
-	               "nav   "
-	               "main  ";
+	grid-template: "aside"
+	               "nav  "
+	               "main ";
 }
 
 .grid aside {
@@ -52,13 +52,14 @@ main .hero {
 .grid main {
 	grid-area: main;
 	min-width: 0;
+	padding-left: 2rem !important;
 }
 
 @media screen and (min-width: 769px) {
 	.grid {
-		grid-template: "aside   aside   aside " auto
-		               "nav     gap     main  " auto
-		               "space   gap     main  " auto / max-content 1rem auto;
+		grid-template: "aside aside" auto
+		               "nav   main " auto
+		               "space main " auto / max-content auto;
 	}
 
 	.sticky-top {
