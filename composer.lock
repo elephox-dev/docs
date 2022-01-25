@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a58c3c8565ebd9ffe16c2905ae513877",
+    "content-hash": "8719a634d7b84dacc03f02e54dab5f1b",
     "packages": [
         {
             "name": "elephox/framework",
@@ -844,7 +844,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.1.0"
+        "php": "~8.1.0",
+        "ext-fileinfo": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
