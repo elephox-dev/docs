@@ -19,6 +19,10 @@ To be able to develop an Elephox application, you will need at least:
 - A text editor or PHP IDE
 - Access to a shell/terminal
 
+Optional prerequisites:
+
+- `git`
+
 # Creating a new project
 
 To create a new project, use the following command:
