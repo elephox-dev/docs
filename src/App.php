@@ -9,6 +9,7 @@ use Elephox\Core\Registrar;
 use Elephox\Files\Path;
 use Elephox\Http\Contract\Message;
 use Elephox\Http\Contract\Request;
+use Elephox\Http\HeaderName;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Stream\ResourceStream;
@@ -58,12 +59,13 @@ class App implements \Elephox\Core\Contract\App
     #[Any('(?<url>.*)', 10)]
     public function handleAny(string $url, PageRenderer $pageRenderer): Message
     {
-        $resource = Path::join(__DIR__, "..", "public", $url);
-        if (is_file($resource)) {
-            $res = fopen($resource, 'rb');
+        $resourcePath = Path::join(__DIR__, "..", "public", $url);
+        if (is_file($resourcePath)) {
+            $resource = fopen($resourcePath, 'rb');
             return Response::build()
                 ->responseCode(ResponseCode::OK)
-                ->body(new ResourceStream($res))
+                ->body(new ResourceStream($resource))
+                ->header(HeaderName::ContentType->value, [mime_content_type($resourcePath)])
                 ->get();
         }
 
