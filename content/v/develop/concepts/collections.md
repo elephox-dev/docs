@@ -227,8 +227,10 @@ The `Enumerable` and `KeyedEnumerable` interfaces use said chaining and combinin
   </div>
   <div class="message-body">
     You can also represent a <code>foreach</code>-loop using a <code>for</code>-loop and iterators:<br>
-    <br>
-<pre><code class="language-php">$array = [1, 2, 3];
+    <div markdown="1">
+
+```php
+$array = [1, 2, 3];
 
 $iterator = new \ArrayIterator($array);
 for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
@@ -238,7 +240,10 @@ for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
 // prints:
 // 0 -> 1
 // 1 -> 2
-// 2 -> 3</code></pre>
+// 2 -> 3
+```
+
+</div>
     Do you recognize the default <code>$i</code> operations being replaced by iterator calls? Pretty neat, huh?
   </div>
 </article>
