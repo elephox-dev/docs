@@ -12,6 +12,7 @@ class ContentFiles
         private Parsedown $parsedown,
         private TemplateRenderer $templateRenderer,
     ) {
+        $this->parsedown->setSafeMode(false);
     }
 
     public static function findBestFit(string $version, string $path): null|string
