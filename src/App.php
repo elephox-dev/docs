@@ -9,10 +9,10 @@ use Elephox\Core\Registrar;
 use Elephox\Files\Path;
 use Elephox\Http\Contract\Message;
 use Elephox\Http\Contract\Request;
-use Elephox\Http\HeaderName;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Stream\ResourceStream;
+use Elephox\Support\MimeType;
 use Parsedown;
 use ParsedownExtra;
 use ParsedownToC;
@@ -59,13 +59,18 @@ class App implements \Elephox\Core\Contract\App
     #[Any('(?<url>.*)', 10)]
     public function handleAny(string $url, PageRenderer $pageRenderer): Message
     {
-        $resourcePath = Path::join(__DIR__, "..", "public", $url);
+        $resourcePath = Path::join(__DIR__, "..", "public", ltrim($url, '/'));
         if (is_file($resourcePath)) {
             $resource = fopen($resourcePath, 'rb');
+            $mime = match (pathinfo($resourcePath, PATHINFO_EXTENSION)) {
+                'js' => MimeType::Applicationjavascript,
+                'css' => MimeType::Textcss,
+                default => MimeType::fromFile($resourcePath),
+            };
             return Response::build()
                 ->responseCode(ResponseCode::OK)
+                ->contentType($mime)
                 ->body(new ResourceStream($resource))
-                ->header(HeaderName::ContentType->value, [mime_content_type($resourcePath)])
                 ->get();
         }
 
