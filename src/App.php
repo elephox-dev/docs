@@ -11,6 +11,7 @@ use Elephox\Http\Contract\Message;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Stream\ResourceStream;
 use Parsedown;
 use ParsedownExtra;
 use ParsedownToC;
@@ -57,6 +58,15 @@ class App implements \Elephox\Core\Contract\App
     #[Any('(?<url>.*)', 10)]
     public function handleAny(string $url, PageRenderer $pageRenderer): Message
     {
+        $resource = Path::join(__DIR__, "..", "public", $url);
+        if (is_file($resource)) {
+            $res = fopen($resource, 'rb');
+            return Response::build()
+                ->responseCode(ResponseCode::OK)
+                ->body(new ResourceStream($res))
+                ->get();
+        }
+
         $notFoundFile = Path::join(__DIR__, "..", "content", "not-found.md");
         $body = $pageRenderer->stream($notFoundFile, ['url' => $url, 'title' => 'Not Found']);
 
