@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/framework.git",
-                "reference": "9d88b1f6c04735d3c91a5319eaac06fe66338278"
+                "reference": "176dd16c00cd12ca614aa10a133f2a6a96bebd3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/9d88b1f6c04735d3c91a5319eaac06fe66338278",
-                "reference": "9d88b1f6c04735d3c91a5319eaac06fe66338278",
+                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/176dd16c00cd12ca614aa10a133f2a6a96bebd3e",
+                "reference": "176dd16c00cd12ca614aa10a133f2a6a96bebd3e",
                 "shasum": ""
             },
             "require": {
@@ -55,6 +55,7 @@
                 "vimeo/psalm": "^4.18"
             },
             "suggest": {
+                "ext-fileinfo": "To use MimeType::fromFile()",
                 "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
             },
             "default-branch": true,
@@ -95,7 +96,7 @@
                 "issues": "https://github.com/elephox-dev/framework/issues",
                 "source": "https://github.com/elephox-dev/framework/tree/develop"
             },
-            "time": "2022-01-24T02:42:45+00:00"
+            "time": "2022-01-25T11:11:14+00:00"
         },
         {
             "name": "erusev/parsedown",
