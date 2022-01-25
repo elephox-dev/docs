@@ -10,3 +10,11 @@
 [toc]
 
 ---
+
+<article class="message is-info">
+  <div class="message-body">
+    The container is also available as its own independent package: <a href="https://packagist.org/packages/elephox/di" target="_blank">elephox/di</a> (DI = Dependency Injection)
+  </div>
+</article>
+
+# Overview
