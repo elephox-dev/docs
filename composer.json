@@ -21,11 +21,5 @@
         "psr-4": {
             "Elephox\\Docs\\": "src/"
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../framework"
-        }
-    ]
+    }
 }

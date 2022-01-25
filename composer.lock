@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc7ce6acfadd280985e3fe57856c04c2",
+    "content-hash": "a58c3c8565ebd9ffe16c2905ae513877",
     "packages": [
         {
             "name": "elephox/framework",
             "version": "dev-develop",
-            "dist": {
-                "type": "path",
-                "url": "../framework",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elephox-dev/framework.git",
                 "reference": "9d88b1f6c04735d3c91a5319eaac06fe66338278"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/9d88b1f6c04735d3c91a5319eaac06fe66338278",
+                "reference": "9d88b1f6c04735d3c91a5319eaac06fe66338278",
+                "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
@@ -51,6 +57,7 @@
             "suggest": {
                 "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -72,96 +79,7 @@
                     "Elephox\\Support\\": "modules/Support/src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Elephox\\Collection\\": "modules/Collection/test/",
-                    "Elephox\\DI\\": "modules/DI/test/",
-                    "Elephox\\Events\\": "modules/Events/test/",
-                    "Elephox\\Files\\": "modules/Files/test/",
-                    "Elephox\\Http\\": "modules/Http/test/",
-                    "Elephox\\Logging\\": "modules/Logging/test/",
-                    "Elephox\\OOR\\": "modules/OOR/test/",
-                    "Elephox\\Stream\\": "modules/Stream/test/",
-                    "Elephox\\Support\\": "modules/Support/test/"
-                }
-            },
-            "scripts": {
-                "benchmark": [
-                    "@putenv XDEBUG_MODE=off",
-                    "phpbench run --report=overview --retry-threshold=5"
-                ],
-                "check-dependencies": [
-                    "@putenv XDEBUG_MODE=off",
-                    "@composer modules:check --namespaces"
-                ],
-                "ci:benchmark": [
-                    "@putenv XDEBUG_MODE=off",
-                    "phpbench run --report=overview --retry-threshold=5"
-                ],
-                "ci:check-dependencies": [
-                    "@putenv XDEBUG_MODE=off",
-                    "@composer modules:check --namespaces"
-                ],
-                "ci:memory-leak-test": [
-                    "@putenv XDEBUG_MODE=coverage",
-                    "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
-                ],
-                "ci:mutation-test": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "@putenv XDEBUG_MODE=coverage",
-                    "infection --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
-                ],
-                "ci:mutation-test:autoscale": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "@putenv XDEBUG_MODE=coverage",
-                    "infection --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction -j$(nproc)"
-                ],
-                "ci:normalize-composer": [
-                    "@putenv XDEBUG_MODE=off",
-                    "@composer modules:normalize"
-                ],
-                "ci:publish-coverage": [
-                    "@putenv XDEBUG_MODE=off",
-                    "php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
-                ],
-                "ci:static-analysis": [
-                    "@putenv XDEBUG_MODE=off",
-                    "psalm --no-cache --output-format=github --long-progress"
-                ],
-                "ci:static-analysis:publish": [
-                    "@putenv XDEBUG_MODE=off",
-                    "psalm --no-cache --output-format=github --long-progress --shepherd"
-                ],
-                "ci:unit-test": [
-                    "@putenv XDEBUG_MODE=coverage",
-                    "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
-                ],
-                "local-ci": [
-                    "@update-readme",
-                    "@check-dependencies",
-                    "@static-analysis",
-                    "@unit-test",
-                    "@mutation-test",
-                    "@benchmark"
-                ],
-                "mutation-test": [
-                    "Composer\\Config::disableProcessTimeout",
-                    "@putenv XDEBUG_MODE=coverage",
-                    "infection --show-mutations"
-                ],
-                "static-analysis": [
-                    "@putenv XDEBUG_MODE=off",
-                    "psalm --no-cache"
-                ],
-                "unit-test": [
-                    "@putenv XDEBUG_MODE=coverage",
-                    "phpunit --configuration=phpunit.xml.dist"
-                ],
-                "update-readme": [
-                    "@putenv XDEBUG_MODE=off",
-                    "@php bin/update-readme-annotations.php"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -173,9 +91,11 @@
             ],
             "description": "Yet another PHP framework.",
             "homepage": "https://elephox.dev",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/elephox-dev/framework/issues",
+                "source": "https://github.com/elephox-dev/framework/tree/develop"
+            },
+            "time": "2022-01-24T02:42:45+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -475,12 +395,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "25a216c5c0426f341fbff7f045fa3946c8041521"
+                "reference": "341bf2dc38dcbc17c9cc7bd1b44c3a40c84959e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/25a216c5c0426f341fbff7f045fa3946c8041521",
-                "reference": "25a216c5c0426f341fbff7f045fa3946c8041521",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/341bf2dc38dcbc17c9cc7bd1b44c3a40c84959e0",
+                "reference": "341bf2dc38dcbc17c9cc7bd1b44c3a40c84959e0",
                 "shasum": ""
             },
             "conflict": {
@@ -520,7 +440,7 @@
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<=3.0.6",
-                "codeigniter4/framework": "<4.1.6",
+                "codeigniter4/framework": "<4.1.8",
                 "codiad/codiad": "<=2.8.4",
                 "composer/composer": "<1.10.23|>=2-alpha.1,<2.1.9",
                 "concrete5/concrete5": "<8.5.5",
@@ -912,7 +832,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-22T00:48:41+00:00"
+            "time": "2022-01-25T09:14:18+00:00"
         }
     ],
     "aliases": [],
