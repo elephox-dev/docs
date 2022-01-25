@@ -16,7 +16,7 @@ body {
 	float: left;
 }
 
-a[target="_blank"]::after {
+a:not(.hide-external-icon)[target="_blank"]::after {
 	content: "\0020\2BAB";
 	font-weight: bold;
 }
