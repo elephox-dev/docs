@@ -17,7 +17,7 @@
   </div>
 </article>
 
-## Overview
+# Overview
 
 First, let's define what types of collections there are:
 
@@ -30,7 +30,7 @@ First, let's define what types of collections there are:
 [Set](#Sets)
 :   A collection of unique elements. A set only accepts elements if it doesn't contain it already.
 
-## Lists
+# Lists
 
 ```php
 use Elephox\Collection\ArrayList;
@@ -56,7 +56,7 @@ You are also more flexible, because it is an object and not a scalar value, mean
 Currently `ArrayList` is the only class implementing `GenericList`.
 You are free to implement it yourself and to help you, Elephox provides a trait with only one abstract method for you to implement: [`IsKeyedEnumerable`](#traits).
 
-## Maps
+# Maps
 
 ```php
 use Elephox\Collection\ArrayMap;
@@ -103,7 +103,7 @@ The values can be objects too, without having to keep two arrays in sync to stor
 As you might have guessed: `ArrayMap` and `ObjectMap` also implement [`KeyedEnumerable`](#keyed-enumerables)!
 This gives you plenty of functions to achieve almost everything you want.
 
-## Sets
+# Sets
 
 ```php
 use Elephox\Collection\ArraySet;
@@ -155,14 +155,19 @@ $uniqueWeightsSet->add($c); // true
 $uniqueWeightsSet->add($d); // false, $d->weight === $a->weight, so the element is considered to be a part of the set already 
 ```
 
-## Enumerable & KeyedEnumerable
+# Enumerable & KeyedEnumerable
 
 Enumerables in Elephox were inspired and heavily influenced by the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1" target="_blank">C# IEnumerable</a>.
 They provide a lot of functionality by chaining and combining **iterators**.
 
 <article class="message is-info">
+  <div class="message-header">
+    <p>Nice to know</p>
+  </div>
   <div class="message-body">
-    An <strong>iterator</strong> is an object which is used by many languages (including PHP) to loop over a collection using <code>while</code>-loops.<br>
+    An <strong>iterator</strong> is an object which is used by many languages (including PHP) to loop over a collection using <code>while</code>-loops.
+    This reduces overhead when implementing other loops such as <code>for</code> and <code>foreach</code> since only <code>while</code> needs to be implemented and the others are inferred with syntactic sugar.
+    <br>
     A <a href="https://www.php.net/manual/en/class.iterator.php" target="_blank">PHP iterator</a> only has a small set of functions:
     <ul>
       <li><code>current()</code>: returns the current value of the iterator</li>
@@ -216,7 +221,7 @@ So you need to implement a subtype (`Iterator` or `IteratorAggregate`) to pass t
 Enumerables in Elephox all implement the `IteratorAggregate`, meaning they have a method - `getIterator()` -, which returns an `Iterator` for the given enumerable.
 The `Enumerable` and `KeyedEnumerable` interfaces use said chaining and combining of iterators to efficiently implement a lot of useful functions.
 
-<article class="message is-success">
+<article class="message is-info">
   <div class="message-header">
     <p>Bonus fact</p>
   </div>
@@ -234,16 +239,17 @@ for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
 // 0 -> 1
 // 1 -> 2
 // 2 -> 3</code></pre>
+    Do you recognize the default <code>$i</code> operations being replaced by iterator calls? Pretty neat, huh?
   </div>
 </article>
 
-### The (key-)difference
+## The (key-)difference
 
 Elephox differentiates between collections having keys ([maps](#maps) and [lists](#lists)) and collections being keyless ([sets](#sets)).
 
 In keyed collections, the key/index decides whether to add, update or remove an element, whereas in keyless collections, only the value is important.
 
-### Traits
+## Traits
 
 The traits `IsEnumerable` and `IsKeyedEnumerable` help you to implement `GenericEnumerable` and `GenericKeyedEnumerable` yourself.
 Both traits have only one abstract method you need to implement: `getIterator(): Iterator`.
@@ -268,17 +274,20 @@ class MyArrayEnumerable implements GenericEnumerable {
 }
 ```
 
-### GenericEnumerable (method reference)
+## GenericEnumerable (method reference)
 
 `// TODO: complete`
 
-### GenericKeyedEnumerable (method reference) {#keyed-enumerables}
+## GenericKeyedEnumerable (method reference) {#keyed-enumerables}
 
 `// TODO: complete`
 
-### Common Methods (method reference) {#enumerable-methods}
+## Common Methods (method reference) {#enumerable-methods}
 
-#### `aggregate`
+These methods exist in both the `GenericEnumerable` and the `GenericKeyedEnumerable`.
+Most of the methods in `GenericKeyedEnumerable` pass the key of the element to the callback along with the value.
+
+### `aggregate`
 
 ```php
 /**
@@ -292,7 +301,7 @@ class MyArrayEnumerable implements GenericEnumerable {
 public function aggregate(callable $accumulator, mixed $seed = null): mixed;
 ```
 
-#### `all`
+### `all`
 
 ```php
 /**
@@ -303,7 +312,7 @@ public function aggregate(callable $accumulator, mixed $seed = null): mixed;
 public function all(callable $predicate): bool;
 ```
 
-#### `any`
+### `any`
 
 ```php
 /**
@@ -314,7 +323,7 @@ public function all(callable $predicate): bool;
 public function any(callable $predicate = null): bool;
 ```
 
-#### `append`
+### `append`
 
 ```php
 /**
@@ -326,7 +335,7 @@ public function append(mixed $value): GenericEnumerable;
 ```
 
 
-#### `average`
+### `average`
 
 ```php
 /**
