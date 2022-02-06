@@ -2,8 +2,12 @@
 
 namespace Elephox\Docs;
 
+use ArrayIterator;
+use Elephox\Collection\Iterator\WhileIterator;
 use Elephox\Core\Handler\Contract\HandledRequest;
 use Elephox\Files\Path;
+use MultipleIterator;
+use NoRewindIterator;
 use RuntimeException;
 
 class TemplateRenderer
@@ -58,77 +62,182 @@ class TemplateRenderer
 
     private function evaluateInternal(string $basePath, string $template, array &$data, array &$loopVars): string
     {
-        preg_match_all('/{\?\s*(.*?)\s*}/', $template, $matches);
-        foreach ($matches[0] as $index => $wrapper) {
-            /** @var string $wrapper */
+        $lines = preg_split("/(?<=\r\n)(?!$)/", $template);
+        $lineIterator = new ArrayIterator($lines);
+        foreach ($lineIterator as $line) {
+            preg_match_all('/{\?\s*(.*?)\s*}/', $line, $matches);
 
-            $templateDirective = $matches[1][$index];
+            $directiveIterator = new MultipleIterator(MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_ASSOC);
+            $directiveIterator->attachIterator(new ArrayIterator($matches[0]), 'wrapper');
+            $directiveIterator->attachIterator(new ArrayIterator($matches[1]), 'directive');
 
-            if (str_starts_with($templateDirective, '$')) {
-                $varPath = substr($templateDirective, 1);
-                $value = $this->getDotPathValue($varPath, $data, $loopVars);
+            foreach ($directiveIterator as $token) {
+                $wrapper = (string)$token['wrapper'];
+                $templateDirective = (string)$token['directive'];
 
-                $template = str_replace($wrapper, $value ?? '', $template);
-            } else if (str_starts_with($templateDirective, 'include')) {
-                $includePath = substr($templateDirective, 8);
-                if (file_exists($includePath)) {
-                    require_once $includePath;
+                if (str_starts_with($templateDirective, 'foreach ')) {
+                    $loopVars['nestLevel']++;
+                    [, $dataPath, , $loopVarName] = explode(" ", $templateDirective, 4);
+                    $dataPath = trim($dataPath, '$ ');
+                    $loopVarName = trim($loopVarName, '$ ');
+                    $loopVarValue = $this->getDotPathValue($dataPath, $data, $loopVars);
+
+                    $loopVars['loopVarNames'][] = $loopVarName;
+                    $loopVars['loopVarValues'][] = $loopVarValue;
+
+
+                    $loopedLines = [];
+                    // TODO: handle parsing of nested loops
+                    $endforeachMatch = null;
+                    $loopIterator = new NoRewindIterator(new WhileIterator($lineIterator, function (string $line) use (&$endforeachMatch): bool { return !preg_match('/{\?\s*endforeach\s*}/', $line, $endforeachMatch); }));
+
+                    $loopWrapper = $loopIterator->current();
+                    $loopIterator->next();
+
+                    foreach ($loopIterator as $loopLine) {
+                        $loopWrapper .= $loopLine;
+                        $loopedLines[] = $loopLine;
+                    }
+
+                    $loopWrapper .= $lineIterator->current();
+
+                    $replacement = "";
+                    $loopVarName = $loopVars['loopVarNames'][$loopVars['nestLevel'] - 1];
+                    foreach ($loopVars['loopVarValues'][$loopVars['nestLevel'] - 1] as $var) {
+                        $data[$loopVarName] = $var;
+
+                        $replacement .= $this->evaluateInternal($basePath, implode("\n", $loopedLines), $data, $loopVars) . PHP_EOL;
+
+                        unset($data[$loopVarName]);
+                    }
+
+                    $loopVars['nestLevel']--;
+                    array_pop($loopVars['loopVarNames']);
+                    array_pop($loopVars['loopVarValues']);
+
+                    $template = $this->replaceFirstMatch($template, $loopWrapper, $replacement);
+                } else {
+                    $replacement = $this->evaluateStatementDirectives($templateDirective, $basePath, $data, $loopVars);
+                    $template = $this->replaceFirstMatch($template, $wrapper, $replacement);
                 }
-                $template = str_replace($wrapper, '', $template);
-            } else if (str_starts_with($templateDirective, 'import')) {
-                $importedPath = Path::join($basePath, substr($templateDirective, 7));
-
-                $template = str_replace($wrapper, $this->renderFile($importedPath, $data), $template);
-            } else if (str_starts_with($templateDirective, 'load')) {
-                $loadedPath = Path::join($basePath, substr($templateDirective, 5));
-
-                foreach ($this->loadData($loadedPath) as $key => $value) {
-                    $data[$key] = $value;
-                }
-
-                $template = str_replace($wrapper, '', $template);
-            } else if (str_starts_with($templateDirective, 'qualify')) {
-                $urlToQualify = substr($templateDirective, 8);
-                $matchedTemplate = $this->request->getMatchedTemplate();
-                if ($matchedTemplate->has('version')) {
-                    $urlToQualify = '/' . $matchedTemplate->get('version') . '/' . ltrim($urlToQualify, '/');
-                }
-
-                $template = str_replace($wrapper, $urlToQualify, $template);
-            } else if (str_starts_with($templateDirective, 'set')) {
-                $varAndValue = substr($templateDirective, 4);
-                [$varName, $value] = explode('=', $varAndValue, 2);
-                $varName = trim($varName, '$ ');
-                $value = trim($value, "\"' ");
-
-                $this->setDotPathValue($varName, $value, $data);
-
-                $template = str_replace($wrapper, '', $template);
-            } else if (str_starts_with($templateDirective, 'foreach ')) {
-                $loopVars['nestLevel']++;
-                [, $dataPath, , $loopVarName ] = explode(" ", $templateDirective, 4);
-                $dataPath = trim($dataPath, '$ ');
-                $loopVarName = trim($loopVarName, '$ ');
-                $loopVarValue = $this->getDotPathValue($dataPath, $data, $loopVars);
-
-                $loopVars['loopVarNames'][] = $loopVarName;
-                $loopVars['loopVarValues'][] = $loopVarValue;
-
-                // TODO: get template between foreach and endforeach and loop over value
-
-                $template = str_replace($wrapper, '', $template);
-            } else if ($templateDirective === 'endforeach') {
-                $loopVars['nestLevel']--;
-                array_pop($loopVars['loopVarNames']);
-                array_pop($loopVars['loopVarValues']);
-
-                $template = str_replace($wrapper, '', $template);
-            } else {
-                throw new RuntimeException('Unknown template directive: ' . $templateDirective);
             }
         }
 
         return $template;
+    }
+
+    private function replaceFirstMatch(string $haystack, string $needle, string $replacement): string
+    {
+        return (string)substr_replace($haystack, $replacement, (int)strpos($haystack, $needle), strlen($needle));
+    }
+
+    private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): string
+    {
+        if (str_starts_with($templateDirective, '(')) {
+            return $this->evaluateExpression($templateDirective, $data, $loopVars);
+        }
+
+        if (str_starts_with($templateDirective, '$')) {
+            $varPath = substr($templateDirective, 1);
+            return (string)$this->getDotPathValue($varPath, $data, $loopVars);
+        }
+
+        if (str_starts_with($templateDirective, 'include')) {
+            $includePath = substr($templateDirective, 8);
+            if (file_exists($includePath)) {
+                require_once $includePath;
+            }
+
+            return '';
+        }
+
+        if (str_starts_with($templateDirective, 'import')) {
+            $importedPath = Path::join($basePath, substr($templateDirective, 7));
+
+            return $this->renderFile($importedPath, $data);
+        }
+
+        if (str_starts_with($templateDirective, 'load')) {
+            $loadedPath = Path::join($basePath, substr($templateDirective, 5));
+
+            foreach ($this->loadData($loadedPath) as $key => $value) {
+                $data[$key] = $value;
+            }
+
+            return '';
+        }
+
+        if (str_starts_with($templateDirective, 'qualify')) {
+            $urlToQualify = substr($templateDirective, 8);
+            $matchedTemplate = $this->request->getMatchedTemplate();
+            if ($matchedTemplate->has('version')) {
+                $urlToQualify = '/' . $matchedTemplate->get('version') . '/' . ltrim($urlToQualify, '/');
+            }
+
+            return $urlToQualify;
+        }
+
+        if (str_starts_with($templateDirective, 'set')) {
+            $varAndValue = substr($templateDirective, 4);
+            [$varName, $value] = explode('=', $varAndValue, 2);
+            $varName = trim($varName, '$ ');
+            $value = $this->evaluateExpression($value, $data, $loopVars);
+
+            $this->setDotPathValue($varName, $value, $data);
+
+            return '';
+        }
+
+        throw new RuntimeException('Unknown template directive: ' . $templateDirective);
+    }
+
+    /** @noinspection TypeUnsafeComparisonInspection */
+    private function evaluateExpression(string $expression, array $data, array $loopVars): mixed
+    {
+        preg_match('/^\(\s*(.*?)\s*(\+|-|\*|\/|%|==)\s*(.*?)\s*\)$/', $expression, $matches);
+        if ($matches === null) {
+            throw new RuntimeException('Invalid expression: ' . $expression);
+        }
+
+        $left = $this->evaluateExpressionPart($matches[1], $data, $loopVars);
+        $operator = match ($matches[2]) {
+            '+' => static fn ($left, $right) => $left + $right,
+            '-' => static fn ($left, $right) => $left - $right,
+            '*' => static fn ($left, $right) => $left * $right,
+            '/' => static fn ($left, $right) => $left / $right,
+            '%' => static fn ($left, $right) => $left % $right,
+            '==' => static fn ($left, $right) => $left == $right,
+            default => throw new RuntimeException('Unknown operator: ' . $matches[2]),
+        };
+        $right = $this->evaluateExpressionPart($matches[3], $data, $loopVars);
+
+        return $operator($left, $right);
+    }
+
+    private function evaluateExpressionPart(string $part, array $data, array $loopVars): mixed
+    {
+        if (str_starts_with($part, '(')) {
+            return $this->evaluateExpression($part);
+        }
+
+        if (str_starts_with($part, '$')) {
+            $varPath = substr($part, 1);
+            return $this->getDotPathValue($varPath, $data, $loopVars);
+        }
+
+        if (is_numeric($part)) {
+            return (int)$part;
+        }
+
+        if (str_starts_with($part, '"')) {
+            return substr($part, 1, -1);
+        }
+
+        if (str_starts_with($part, "'")) {
+            return substr($part, 1, -1);
+        }
+
+        throw new RuntimeException('Unknown expression part: ' . $part);
     }
 
     private function getDotPathValue(string $path, array $data, array $loopVars): mixed

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Docs;
 
+use Elephox\Core\Context\Contract\ExceptionContext;
+use Elephox\Core\Handler\Attribute\ExceptionHandler;
 use Elephox\Core\Handler\Attribute\Http\Any;
 use Elephox\Core\Handler\Attribute\Http\Get;
 use Elephox\Core\Registrar;
@@ -12,11 +14,14 @@ use Elephox\Http\Contract\Request;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Stream\ResourceStream;
+use Elephox\Stream\StringStream;
 use Elephox\Support\MimeType;
 use Highlight\Highlighter;
 use Parsedown;
 use ParsedownExtra;
 use ParsedownToC;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run as Whoops;
 
 class App implements \Elephox\Core\Contract\App
 {
@@ -28,6 +33,7 @@ class App implements \Elephox\Core\Contract\App
         PageRenderer::class,
         TemplateRenderer::class,
         Highlighter::class,
+        Whoops::class,
     ];
 
     public $aliases = [
@@ -50,7 +56,7 @@ class App implements \Elephox\Core\Contract\App
             return $this->handleAny((string)$request->getUrl(), $pageRenderer);
         }
 
-        $body = $pageRenderer->stream($contentFile, ['branch' => $templateValues['version']]);
+        $body = $pageRenderer->stream($contentFile, $templateValues);
 
         return Response::build()
             ->responseCode(ResponseCode::OK)
@@ -107,12 +113,15 @@ class App implements \Elephox\Core\Contract\App
             ->get();
     }
 
-//    #[ExceptionHandler]
-//    public function handleException(ExceptionContext $exceptionContext): Message
-//    {
-//        return Response::build()
-//            ->responseCode(ResponseCode::InternalServerError)
-//            ->body(new StringStream("Unfortunately, an exception occurred: " . $exceptionContext->getException()->getMessage()))
-//            ->get();
-//    }
+    #[ExceptionHandler]
+    public function handleException(ExceptionContext $exceptionContext, Whoops $whoops): Message
+    {
+        $whoops->pushHandler(new PrettyPageHandler());
+        $body = $whoops->handleException($exceptionContext->getException());
+
+        return Response::build()
+            ->responseCode(ResponseCode::InternalServerError)
+            ->body(new StringStream($body))
+            ->get();
+    }
 }
