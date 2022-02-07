@@ -85,7 +85,6 @@ class TemplateRenderer
                     $loopVars['loopVarNames'][] = $loopVarName;
                     $loopVars['loopVarValues'][] = $loopVarValue;
 
-
                     $loopedLines = [];
                     // TODO: handle parsing of nested loops
                     $endforeachMatch = null;
