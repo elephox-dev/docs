@@ -5,7 +5,7 @@
 	<div class="select">
 		<select id="branches-select">
 			{? foreach $branches as $branch }
-				<option value="{? $branch.value }/{? $path }" selected="{? ($branch.value == $version) }">{? $branch.label }</option>
+				<option value="{? $branch.value }/{? $path }" {? (($branch.value == $version) ? 'selected') }>{? $branch.label }</option>
 			{? endforeach }
 		</select>
 	</div>

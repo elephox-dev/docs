@@ -126,12 +126,12 @@ class TemplateRenderer
         return $template;
     }
 
-    private function replaceFirstMatch(string $haystack, string $needle, string $replacement): string
+    private function replaceFirstMatch(string $haystack, string $needle, mixed $replacement): string
     {
-        return (string)substr_replace($haystack, $replacement, (int)strpos($haystack, $needle), strlen($needle));
+        return (string)substr_replace($haystack, (string)$replacement, (int)strpos($haystack, $needle), strlen($needle));
     }
 
-    private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): string
+    private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): mixed
     {
         if (str_starts_with($templateDirective, '(')) {
             return $this->evaluateExpression($templateDirective, $data, $loopVars);
@@ -139,7 +139,7 @@ class TemplateRenderer
 
         if (str_starts_with($templateDirective, '$')) {
             $varPath = substr($templateDirective, 1);
-            return (string)$this->getDotPathValue($varPath, $data, $loopVars);
+            return $this->getDotPathValue($varPath, $data, $loopVars);
         }
 
         if (str_starts_with($templateDirective, 'include')) {
@@ -194,7 +194,7 @@ class TemplateRenderer
     /** @noinspection TypeUnsafeComparisonInspection */
     private function evaluateExpression(string $expression, array $data, array $loopVars): mixed
     {
-        preg_match('/^\(\s*(.*?)\s*(\+|-|\*|\/|%|==)\s*(.*?)\s*\)$/', $expression, $matches);
+        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||\&\&|\?)\s+(.*)\s*\)$/', $expression, $matches);
         if (empty($matches)) {
             return $this->evaluateExpressionPart($expression, $data, $loopVars);
         }
@@ -207,6 +207,10 @@ class TemplateRenderer
             '/' => static fn ($left, $right) => $left / $right,
             '%' => static fn ($left, $right) => $left % $right,
             '==' => static fn ($left, $right) => $left == $right,
+            '!=' => static fn ($left, $right) => $left != $right,
+            '||' => static fn ($left, $right) => $left || $right,
+            '&&' => static fn ($left, $right) => $left && $right,
+            '?' => static fn ($left, $right) => $left ? $right : null,
             default => throw new RuntimeException('Unknown operator: ' . $matches[2]),
         };
         $right = $this->evaluateExpressionPart($matches[3], $data, $loopVars);
