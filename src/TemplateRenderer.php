@@ -181,7 +181,7 @@ class TemplateRenderer
             $varAndValue = substr($templateDirective, 4);
             [$varName, $value] = explode('=', $varAndValue, 2);
             $varName = trim($varName, '$ ');
-            $value = $this->evaluateExpression($value, $data, $loopVars);
+            $value = $this->evaluateExpression(trim($value), $data, $loopVars);
 
             $this->setDotPathValue($varName, $value, $data);
 
@@ -195,8 +195,8 @@ class TemplateRenderer
     private function evaluateExpression(string $expression, array $data, array $loopVars): mixed
     {
         preg_match('/^\(\s*(.*?)\s*(\+|-|\*|\/|%|==)\s*(.*?)\s*\)$/', $expression, $matches);
-        if ($matches === null) {
-            throw new RuntimeException('Invalid expression: ' . $expression);
+        if (empty($matches)) {
+            return $this->evaluateExpressionPart($expression, $data, $loopVars);
         }
 
         $left = $this->evaluateExpressionPart($matches[1], $data, $loopVars);
@@ -217,7 +217,7 @@ class TemplateRenderer
     private function evaluateExpressionPart(string $part, array $data, array $loopVars): mixed
     {
         if (str_starts_with($part, '(')) {
-            return $this->evaluateExpression($part);
+            return $this->evaluateExpression($part, $data, $loopVars);
         }
 
         if (str_starts_with($part, '$')) {
