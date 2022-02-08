@@ -62,7 +62,7 @@ class TemplateRenderer
 
     private function evaluateInternal(string $basePath, string $template, array &$data, array &$loopVars): string
     {
-        $lines = preg_split("/(?<=\r\n)(?!$)/", $template);
+        $lines = preg_split("/(?<=\n)(?!$)/", $template);
         $lineIterator = new ArrayIterator($lines);
         foreach ($lineIterator as $line) {
             preg_match_all('/{\?\s*(.*?)\s*}/', $line, $matches);

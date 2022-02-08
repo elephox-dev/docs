@@ -42,38 +42,43 @@ class App implements \Elephox\Core\Contract\App
         ParsedownToC::class => ElephoxParsedown::class,
     ];
 
-    #[Get('.*', 2)]
-    public function handleGetDefaultVersionContent(Request $request, PageRenderer $pageRenderer): Message
+    #[Any('(?<url>.*)')]
+    public function handleAny(string $url, PageRenderer $pageRenderer): Message
     {
-        return $this->handleGetVersionContent($request, ['version' => 'develop', 'path' => ltrim((string)$request->getUrl(), '/')], $pageRenderer);
+        $url = ltrim($url, '/');
+        $contentFile = ContentFiles::findBestFit('develop', $url);
+        if ($contentFile === null) {
+            return $this->handleResource("public", $url, $pageRenderer);
+        }
+
+        return $this->handleContent($contentFile, ['version' => 'develop', $url], $pageRenderer);
     }
 
-    #[Get('(?<version>\d+\.\d+(?:\.\d+)?|main|develop)(?:\/(?<path>.*))?')]
+    #[Get('(?<version>\d+\.\d+(?:\.\d+)?|main|develop)(?:\/(?<path>.*))?', 10)]
     public function handleGetVersionContent(Request $request, array $templateValues, PageRenderer $pageRenderer): Message
     {
         $contentFile = ContentFiles::findBestFit($templateValues['version'], $templateValues['path'] ?? '');
         if ($contentFile === null) {
-            return $this->handleAny((string)$request->getUrl(), $pageRenderer);
+            return $this->handleResource("public", (string)$request->getUrl(), $pageRenderer);
         }
 
-        $body = $pageRenderer->stream($contentFile, $templateValues);
-
-        return Response::build()
-            ->responseCode(ResponseCode::OK)
-            ->body($body)
-            ->get();
+        return $this->handleContent($contentFile, $templateValues, $pageRenderer);
     }
 
-    #[Get('\/(?<url>vendor\/.*)')]
+    #[Get('\/(?<url>vendor\/.*)', 10)]
     public function handleVendor(string $url, PageRenderer $pageRenderer): Message
     {
         return $this->handleResource("", $url, $pageRenderer);
     }
 
-    #[Any('(?<url>.*)', 10)]
-    public function handleAny(string $url, PageRenderer $pageRenderer): Message
+    private function handleContent(string $contentFile, array $templateValue, PageRenderer $pageRenderer): Message
     {
-        return $this->handleResource("public", $url, $pageRenderer);
+        $body = $pageRenderer->stream($contentFile, $templateValue);
+
+        return Response::build()
+            ->responseCode(ResponseCode::OK)
+            ->body($body)
+            ->get();
     }
 
     private function handleResource(string $parent, string $url, PageRenderer $pageRenderer): Message
