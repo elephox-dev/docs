@@ -132,10 +132,6 @@ class TemplateRenderer
 
     private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): mixed
     {
-        if (str_starts_with($templateDirective, '(')) {
-            return $this->evaluateExpression($templateDirective, $data, $loopVars);
-        }
-
         if (str_starts_with($templateDirective, '$')) {
             $varPath = substr($templateDirective, 1);
             return $this->getDotPathValue($varPath, $data, $loopVars);
@@ -176,29 +172,42 @@ class TemplateRenderer
             return $urlToQualify;
         }
 
+        if (str_starts_with($templateDirective, 'active')) {
+            $activePath = substr($templateDirective, 7);
+            $activePath = $this->evaluateStatementDirectives("qualify $activePath", $basePath, $data, $loopVars);
+            $currentPath = $this->request->getUrl()->path;
+
+            return $activePath === $currentPath;
+        }
+
         if (str_starts_with($templateDirective, 'set')) {
             $varAndValue = substr($templateDirective, 4);
             [$varName, $value] = explode('=', $varAndValue, 2);
             $varName = trim($varName, '$ ');
-            $value = $this->evaluateExpression(trim($value), $data, $loopVars);
+            $value = $this->evaluateExpression(trim($value), $basePath, $data, $loopVars);
 
             $this->setDotPathValue($varName, $value, $data);
 
             return '';
         }
 
-        throw new RuntimeException('Unknown template directive: ' . $templateDirective);
+        if (str_starts_with($templateDirective, '(')) {
+            return $this->evaluateExpression($templateDirective, $basePath, $data, $loopVars);
+        }
+
+        return null;
     }
 
     /** @noinspection TypeUnsafeComparisonInspection */
-    private function evaluateExpression(string $expression, array $data, array $loopVars): mixed
+    private function evaluateExpression(string $expression, string $basePath, array &$data, array $loopVars): mixed
     {
         preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||\&\&|\?)\s+(.*)\s*\)$/', $expression, $matches);
         if (empty($matches)) {
-            return $this->evaluateExpressionPart($expression, $data, $loopVars);
+            $value = $this->evaluateStatementDirectives(trim($expression, '()'), $basePath, $data, $loopVars);
+            return $value ?? $this->evaluateExpressionPart($expression, $basePath, $data, $loopVars);
         }
 
-        $left = $this->evaluateExpressionPart($matches[1], $data, $loopVars);
+        $left = $this->evaluateExpressionPart($matches[1], $basePath, $data, $loopVars);
         $operator = match ($matches[2]) {
             '+' => static fn ($left, $right) => $left + $right,
             '-' => static fn ($left, $right) => $left - $right,
@@ -212,15 +221,15 @@ class TemplateRenderer
             '?' => static fn ($left, $right) => $left ? $right : null,
             default => throw new RuntimeException('Unknown operator: ' . $matches[2]),
         };
-        $right = $this->evaluateExpressionPart($matches[3], $data, $loopVars);
+        $right = $this->evaluateExpressionPart($matches[3], $basePath, $data, $loopVars);
 
         return $operator($left, $right);
     }
 
-    private function evaluateExpressionPart(string $part, array $data, array $loopVars): mixed
+    private function evaluateExpressionPart(string $part, string $basePath, array $data, array $loopVars): mixed
     {
         if (str_starts_with($part, '(')) {
-            return $this->evaluateExpression($part, $data, $loopVars);
+            return $this->evaluateExpression($part, $basePath, $data, $loopVars);
         }
 
         if (str_starts_with($part, '$')) {

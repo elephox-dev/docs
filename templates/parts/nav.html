@@ -2,24 +2,25 @@
 	General
 </p>
 <ul class="menu-list">
-	<li><a href="{? qualify / }">Home</a></li>
+	<li><a href="{? qualify / }" class="{? ((active /) ? 'is-active') }">Home</a></li>
 	<li><a href="https://github.com/elephox-dev" target="_blank">GitHub</a></li>
-	<li><a href="{? qualify /guide }">Building a To-Do-App</a></li>
+	<li><a href="https://ricardoboss.notion.site/Elephox-d1b59b70c55f41b385e72568bbd05bd2" target="_blank">Project Goals</a></li>
+	<li><a href="{? qualify /guide }" class="{? ((active /guide) ? 'is-active') }">Building a To-Do-App</a></li>
 </ul>
 <p class="menu-label">
 	Documentation
 </p>
 <ul class="menu-list">
-	<li><a href="{? qualify /getting-started }">Getting Started</a></li>
+	<li><a href="{? qualify /getting-started }" class="{? ((active /getting-started) ? 'is-active') }">Getting Started</a></li>
 	<li>
-		<a href="{? qualify /concepts }">Concepts</a>
+		<a href="{? qualify /concepts }" class="{? ((active /concepts) ? 'is-active') }">Concepts</a>
 		<ul>
-			<li><a href="{? qualify /concepts/collections }">Collections</a></li>
-			<li><a href="{? qualify /concepts/container }">Container</a></li>
-			<li><a href="{? qualify /concepts/contexts-and-handlers }">Contexts & Handlers</a></li>
+			<li><a href="{? qualify /concepts/collections }" class="{? ((active /concepts/collections) ? 'is-active') }">Collections</a></li>
+			<li><a href="{? qualify /concepts/container }" class="{? ((active /concepts/container) ? 'is-active') }">Container</a></li>
+			<li><a href="{? qualify /concepts/contexts-and-handlers }" class="{? ((active /concepts/contexts-and-handlers) ? 'is-active') }">Contexts & Handlers</a></li>
 		</ul>
 	</li>
-	<li><a href="{? qualify /contributing }">Contributing</a></li>
+	<li><a href="{? qualify /contributing }" class="{? ((active /contributing) ? 'is-active') }">Contributing</a></li>
 </ul>
 <hr class="is-hidden-mobile has-background-grey-lighter" style="height: 1px">
 <a class="is-hidden-mobile" href="#">Back to top</a>
