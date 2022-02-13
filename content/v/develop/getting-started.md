@@ -14,14 +14,14 @@
 
 To be able to develop an Elephox application, you will need at least:
 
-- A working PHP 8.1 installation
+- A working PHP 8.1 (or 8.2) installation
 - A working Composer 2 installation
-- A text editor or PHP IDE
+- A text editor (like [VS Code](https://code.visualstudio.com/)) or PHP IDE (like [PhpStorm](https://www.jetbrains.com/phpstorm/))
 - Access to a shell/terminal
 
 Optional prerequisites:
 
-- `git`
+- [`git`](https://git-scm.com/)
 
 # Creating a new project
 
