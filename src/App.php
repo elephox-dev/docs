@@ -15,7 +15,7 @@ use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
-use Elephox\Support\MimeType;
+use Elephox\Mimey\MimeType;
 use Highlight\Highlighter;
 use Parsedown;
 use ParsedownExtra;
@@ -105,10 +105,11 @@ class App implements \Elephox\Core\Contract\App
     private function wrapResource(string $path): Message
     {
         $resource = fopen($path, 'rb');
-        $mime = match (pathinfo($path, PATHINFO_EXTENSION)) {
-            'js' => MimeType::Applicationjavascript,
-            'css' => MimeType::Textcss,
-            default => MimeType::fromFile($path),
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $mime = match ($ext) {
+            'js' => MimeType::ApplicationJavascript,
+            'css' => MimeType::TextCss,
+            default => MimeType::fromExtension($ext),
         };
 
         return Response::build()
