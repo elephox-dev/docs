@@ -105,16 +105,10 @@ class App implements \Elephox\Core\Contract\App
     private function wrapResource(string $path): Message
     {
         $resource = fopen($path, 'rb');
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        $mime = match ($ext) {
-            'js' => MimeType::ApplicationJavascript,
-            'css' => MimeType::TextCss,
-            default => MimeType::fromExtension($ext),
-        };
 
         return Response::build()
             ->responseCode(ResponseCode::OK)
-            ->contentType($mime)
+            ->contentType(MimeType::fromExtension(pathinfo($path, PATHINFO_EXTENSION)))
             ->body(new ResourceStream($resource))
             ->get();
     }
