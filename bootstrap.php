@@ -9,5 +9,6 @@ use Elephox\Docs\App;
 $core = Core::create();
 
 $core->registerApp(App::class);
+$core->registerGlobal();
 
 return $core;

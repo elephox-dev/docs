@@ -2,12 +2,16 @@
 
 namespace Elephox\Docs;
 
+use Exception;
 use Highlight\Highlighter;
 use ParsedownToC;
 
 class ElephoxParsedown extends ParsedownToC
 {
-    public function __construct(private Highlighter $highlighter)
+    /**
+     * @throws Exception
+     */
+    public function __construct(private readonly Highlighter $highlighter)
     {
         parent::__construct();
     }
@@ -29,10 +33,14 @@ class ElephoxParsedown extends ParsedownToC
         }
 
         $text = $Block['element']['text']['text'];
-        unset($Block['element']['text']['text']);
 
-        $highlighted = $this->highlighter->highlight($language, $text);
-        $Block['element']['text']['rawHtml'] = $highlighted->value;
+        try {
+            $highlighted = $this->highlighter->highlight($language, $text);
+            $Block['element']['text']['rawHtml'] = $highlighted->value;
+            unset($Block['element']['text']['text']);
+        } catch (Exception) {
+            // ignore
+        }
 
         return $Block;
     }
