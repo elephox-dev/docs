@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+const APP_ROOT = __DIR__;
+require_once APP_ROOT . '/vendor/autoload.php';
+
+use Elephox\Console\ConsoleApplicationBuilder;
+use Elephox\DI\Contract\ServiceCollection;
+use Elephox\Docs\Routes;
+use Elephox\Web\Routing\Contract\Router;
+use Elephox\Web\Routing\RequestRouter;
+
+$builder = ConsoleApplicationBuilder::create()->addLogging();
+
+// Add the request router, so we can use it in commands
+$builder->services->addSingleton(Router::class, RequestRouter::class, function (ServiceCollection $services): RequestRouter {
+	return (new RequestRouter($services))->loadFromClass(Routes::class);
+});
+
+$builder->commands->loadFromNamespace("Elephox\\Inspector\\Commands");
+
+$app = $builder->build();
+try {
+	$app->run();
+} catch (Throwable $e) {
+	$app->exceptionHandler()->handleException($e);
+}

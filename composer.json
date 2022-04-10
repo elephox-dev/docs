@@ -1,8 +1,8 @@
 {
-    "name": "elephox/elephox-dev.github.io",
+    "name": "elephox/docs",
     "description": "Elephox Documentation",
-    "type": "project",
     "license": "MIT",
+    "type": "project",
     "authors": [
         {
             "name": "Ricardo Boss",
@@ -10,16 +10,16 @@
         }
     ],
     "require": {
-        "php": "~8.1.0",
+        "php": "^8.1 <8.3",
         "ext-fileinfo": "*",
-        "elephox/framework": "^1.x-dev",
+        "elephox/framework": "dev-develop",
         "erusev/parsedown-extra": "^0.8",
+        "filp/whoops": "^2.14",
         "keinos/parsedown-toc": "^1.1",
-        "scrivo/highlight.php": "v9.18.1.9",
-        "filp/whoops": "^2.14"
+        "scrivo/highlight.php": "9.18.1.9"
     },
     "require-dev": {
-        "elephox/inspector": "^v0.2",
+        "elephox/inspector": "dev-develop",
         "roave/security-advisories": "dev-latest"
     },
     "autoload": {
