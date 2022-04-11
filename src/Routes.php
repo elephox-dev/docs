@@ -39,7 +39,7 @@ class Routes
         return $this->handleContent($contentFile, ['version' => $version, 'path' => $path ?? ''], $pageRenderer);
     }
 
-    #[Get('regex:\/(?<url>vendor\/.*)', 10)]
+    #[Get('regex:(?<url>vendor\/.*)', 10)]
     public function handleVendor(string $url, PageRenderer $pageRenderer): ResponseBuilder
     {
         return $this->handleResource("", $url, $pageRenderer);
