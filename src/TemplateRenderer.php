@@ -168,7 +168,12 @@ class TemplateRenderer
         }
 
         if (str_starts_with($templateDirective, 'import')) {
-            $importedPath = Path::join($basePath, substr($templateDirective, 7));
+            $expression = substr($templateDirective, 7);
+            if (str_starts_with($expression, '(')) {
+                $expression = $this->evaluateExpression(trim($expression), $basePath, $data, $loopVars);
+            }
+
+            $importedPath = Path::join($basePath, $expression);
 
             return $this->renderFile($importedPath, $data);
         }
@@ -224,7 +229,7 @@ class TemplateRenderer
      */
     private function evaluateExpression(string $expression, string $basePath, array &$data, array $loopVars): mixed
     {
-        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||&&|\?)\s+(.*)\s*\)$/', $expression, $matches);
+        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||&&|\?|\.)\s+(.*)\s*\)$/', $expression, $matches);
         if (empty($matches)) {
             $value = $this->evaluateStatementDirectives(trim($expression, '()'), $basePath, $data, $loopVars);
             return $value ?? $this->evaluateExpressionPart($expression, $basePath, $data, $loopVars);
@@ -237,6 +242,7 @@ class TemplateRenderer
             '*' => static fn ($left, $right) => $left * $right,
             '/' => static fn ($left, $right) => $left / $right,
             '%' => static fn ($left, $right) => $left % $right,
+            '.' => static fn ($left, $right) => $left . $right,
             '==' => static fn ($left, $right) => $left == $right,
             '!=' => static fn ($left, $right) => $left != $right,
             '||' => static fn ($left, $right) => $left || $right,

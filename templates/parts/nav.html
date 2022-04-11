@@ -10,21 +10,7 @@
 	Documentation
 </p>
 <ul class="menu-list">
-	<li><a href="{? qualify /getting-started }" class="{? ((active /getting-started) ? 'is-active') }">Getting Started</a></li>
-	<li>
-		<a href="{? qualify /concepts }" class="{? ((active /concepts) ? 'is-active') }">Concepts</a>
-		<ul>
-			<li><a href="{? qualify /concepts/collections }" class="{? ((active /concepts/collections) ? 'is-active') }">Collections</a></li>
-			<li><a href="{? qualify /concepts/container }" class="{? ((active /concepts/container) ? 'is-active') }">Container</a></li>
-			<li><a href="{? qualify /concepts/contexts-and-handlers }" class="{? ((active /concepts/contexts-and-handlers) ? 'is-active') }">Contexts & Handlers</a></li>
-		</ul>
-	</li>
-	<li>
-		<a href="{? qualify /contributing }" class="{? ((active /contributing) ? 'is-active') }">Contributing</a>
-		<ul>
-			<li><a href="{? qualify /contributing/workflow }" class="{? ((active /contributing/workflow) ? 'is-active') }">Workflow</a></li>
-		</ul>
-	</li>
+	{? import (('navs/' . $version) . '.html') }
 </ul>
 <hr class="is-hidden-mobile has-background-grey-lighter" style="height: 1px">
 <a class="is-hidden-mobile" href="#">Back to top</a>
