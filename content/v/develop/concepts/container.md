@@ -13,7 +13,7 @@
 
 <article class="message is-info">
   <div class="message-body">
-    The container is also available as its own independent package: <a href="https://packagist.org/packages/elephox/di" target="_blank">elephox/di</a>
+    The service collection is also available as its own independent package: <a href="https://packagist.org/packages/elephox/di" target="_blank">elephox/di</a>
   </div>
 </article>
 
@@ -104,41 +104,41 @@ A `Container` is like a builder collecting manuals:
 
 In this analogy, the manuals are classes and what is being built are objects.
 
-- you can tell the container to "register" a specific class, so the container knows how to build it
-- if the container needs an instance of another class to build what you requested, it can look up the "manual" to build that class first
-- in case the container doesn't know how to build a class, you can provide them with an instance you already built
+- you can tell the service collection to "register" a specific class, so the service collection knows how to build it
+- if the service collection needs an instance of another class to build what you requested, it can look up the "manual" to build that class first
+- in case the service collection doesn't know how to build a class, you can provide them with an instance you already built
 
 This works by using `Reflection`.
 The code can basically look at itself and analyse things like parameter type hints, return types and object properties.
-When you ask the container to build a class instance, the container looks at the constructor arguments and tries to build an instance of each parameter.
+When you ask the service collection to build a class instance, the service collection looks at the constructor arguments and tries to build an instance of each parameter.
 
 ---
 
-Applying all this to our example app, we can use the container like this:
+Applying all this to our example app, we can use the service collection like this:
 
 ```php
-use Elephox\DI\Container;
+use Elephox\DI\ServiceCollection;
 
-$container = new Container();
-$container->register(TimeLib::class);
-$container->register(ORM::class);
-$container->register(TodoItemValidator::class);
-$container->register(TodoItemRepository::class);
+$services = new ServiceCollection();
+$services->register(TimeLib::class);
+$services->register(ORM::class);
+$services->register(TodoItemValidator::class);
+$services->register(TodoItemRepository::class);
 
-$controller = $container->getOrInstantiate(TodoItemController::class);
+$controller = $services->getOrInstantiate(TodoItemController::class);
 ```
 
-Now you only have to have the container instance to care about and it will take care of the rest.
+Now you only have to have the service collection instance to care about and it will take care of the rest.
 
 # Registering a callback
 
-To influence how the container builds an object, you can pass a callback to the register method, which gets invoked when an instance of the registered class is requested:
+To influence how the service collection builds an object, you can pass a callback to the register method, which gets invoked when an instance of the registered class is requested:
 
 ```php
-use Elephox\DI\Container;
+use Elephox\DI\ServiceCollection;
 
-$container = new Container();
-$container->register(TimeLib::class, function (Container $c) {
+$services = new ServiceCollection();
+$services->register(TimeLib::class, function (Container $c) {
     $timezoneProvider = $c->get(TimeZonesLib::class);
     $timezoneProvider->setDefault('Europe/Berlin');
 
@@ -146,27 +146,27 @@ $container->register(TimeLib::class, function (Container $c) {
 });
 ```
 
-# Instance Lifetime
+# Service Lifetime
 
-The container keeps a reference to each object it created and returns it when the same class is requested another time.
+The service collection keeps a reference to each object it created and returns it when the same class is requested another time.
 
 You can of course influence this behaviour when registering a class:
 
 ```php
-use Elephox\DI\Container;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceCollection;
+use Elephox\DI\ServiceLifetime;
 
-$container = new Container();
-$container->register(TimeLib::class, lifetime: InstanceLifetime::Transient);
+$services = new ServiceCollection();
+$services->register(TimeLib::class, lifetime: ServiceLifetime::Transient);
 ```
 
-Currently, you can only choose between `InstanceLifetime::Singleton` and `InstanceLifetime::Transient`.
-Singleton of course means there should only ever be one instance of the class within the container and that same instance is always returned when the class is requested.
+Currently, you can only choose between `ServiceLifetime::Singleton` and `ServiceLifetime::Transient`.
+Singleton of course means there should only ever be one instance of the class within the service collection and that same instance is always returned when the class is requested.
 Transient means a new instance will be created every time a class is requested.
 
 # Aliases
 
-While developing, you might want to change a concrete implementation of a class and haven't used an interface to request it from the container.
+While developing, you might want to change a concrete implementation of a class and haven't used an interface to request it from the service collection.
 Now you have to update every `->get()` call to request the new implementation.
 
 To prevent this, you can add an `alias` for classes.
@@ -174,14 +174,14 @@ An alias doesn't need to be a valid class name.
 It can be any string you want (except the empty string):
 
 ```php
-use Elephox\DI\Container;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceCollection;
+use Elephox\DI\ServiceLifetime;
 
-$container = new Container();
-$container->register(TimeLib::class, aliases: 'time-parser');
+$services = new ServiceCollection();
+$services->register(TimeLib::class, aliases: 'time-parser');
 
 // then request it like you would normally:
-$container->get('time-parser');
+$services->get('time-parser');
 ```
 
 <div class="message is-warning">
@@ -190,7 +190,7 @@ $container->get('time-parser');
   </div>
 <div class="message-body" markdown="1">
 
-The alias takes precedence if the container has multiple options for injecting a parameter. Aliases are resolved by the
+The alias takes precedence if the service collection has multiple options for injecting a parameter. Aliases are resolved by the
 parameter name.
 
 </div>
@@ -198,20 +198,20 @@ parameter name.
 
 # Parameter Injection
 
-The container implements functions allowing you to call any callback, method or constructor by analyzing the required parameters and trying to provide them.
+The service collection implements functions allowing you to call any callback, method or constructor by analyzing the required parameters and trying to provide them.
 
 ## Class Instantiation
 
-You can use the container to instantiate objects for you.
+You can use the service collection to instantiate objects for you.
 This can be helpful if you don't want to or can't provide constructor parameters for a given class:
 
 ```php
-use Elephox\DI\Container;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceCollection;
+use Elephox\DI\ServiceLifetime;
 
 // somewhere in your code...
-$container = new Container();
-$container->register(TimeLib::class);
+$services = new ServiceCollection();
+$services->register(TimeLib::class);
 
 // TestClass.php
 class TestClass {
@@ -219,27 +219,27 @@ class TestClass {
 }
 
 // somewhere else in your code...
-$testClassInstance = $container->instantiate(TestClass::class);
+$testClassInstance = $services->instantiate(TestClass::class);
 ```
 
 ## Callbacks & Function Invocation
 
 ```php
-use Elephox\DI\Container;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceCollection;
+use Elephox\DI\ServiceLifetime;
 
 // somewhere in your code...
-$container = new Container();
-$container->register(TimeLib::class);
+$services = new ServiceCollection();
+$services->register(TimeLib::class);
 
 // somewhere else....
 $callback = function (TimeLib $timeLib) {
     // do something with the TimeLib instance
 }
 
-$container->callback($callback);
+$services->callback($callback);
 
-// or use the container to call methods for you, injecting the required parameters
+// or use the service collection to call methods for you, injecting the required parameters
 
 class TestClass {
     public function needsTimeLib(TimeLib $timeLib) {
@@ -249,8 +249,8 @@ class TestClass {
 
 // use your own instance...
 $testClass = new TestClass();
-$container->call($testClass, 'needsTimeLib');
+$services->call($testClass, 'needsTimeLib');
 
-// ...or let the container create one for you and call the method
-$container->call(TestClass::class, 'needsTimeLib');
+// ...or let the service collection create one for you and call the method
+$services->call(TestClass::class, 'needsTimeLib');
 ```
