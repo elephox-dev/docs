@@ -48,6 +48,10 @@ class TemplateRenderer
      */
     public function renderFile(string $templatePath, array &$data): string
     {
+        if (!is_file($templatePath)) {
+            throw new RuntimeException('File to render not found: ' . $templatePath);
+        }
+
         $template = file_get_contents($templatePath);
         $basePath = dirname($templatePath);
 
