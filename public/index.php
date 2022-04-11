@@ -23,7 +23,7 @@ $builder->services->addSingleton(TemplateRenderer::class);
 $builder->services->addSingleton(Highlighter::class, implementationFactory: function (): Highlighter {
     $h = new Highlighter(false);
 
-    Highlighter::registerLanguage('php', APP_ROOT . './vendor/scrivo/highlight.php/Highlight/languages/php.json');
+    Highlighter::registerLanguage('php', APP_ROOT . '/vendor/scrivo/highlight.php/Highlight/languages/php.json');
 
     return $h;
 });
