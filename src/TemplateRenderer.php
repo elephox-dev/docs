@@ -163,6 +163,10 @@ class TemplateRenderer
 
         if (str_starts_with($templateDirective, 'include')) {
             $includePath = substr($templateDirective, 8);
+            if (str_starts_with($includePath, '(')) {
+                $includePath = $this->evaluateExpression(trim($includePath), $basePath, $data, $loopVars);
+            }
+
             if (file_exists($includePath)) {
                 require_once $includePath;
             }
@@ -182,7 +186,12 @@ class TemplateRenderer
         }
 
         if (str_starts_with($templateDirective, 'load')) {
-            $loadedPath = Path::join($basePath, substr($templateDirective, 5));
+            $expression = substr($templateDirective, 5);
+            if (str_starts_with($expression, '(')) {
+                $expression = $this->evaluateExpression(trim($expression), $basePath, $data, $loopVars);
+            }
+
+            $loadedPath = Path::join($basePath, $expression);
 
             foreach ($this->loadData($loadedPath) as $key => $value) {
                 $data[$key] = $value;
