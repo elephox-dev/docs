@@ -25,7 +25,7 @@ class Routes
             return $this->handleResource("public", $url, $pageRenderer);
         }
 
-        return $this->handleContent($contentFile, ['version' => 'develop', $url], $pageRenderer);
+        return $this->handleContent($contentFile, ['version' => 'develop', 'path' => $url], $pageRenderer);
     }
 
     #[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|develop)(?:\/(?<path>.*))?', 10)]
