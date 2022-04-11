@@ -15,7 +15,6 @@ class TemplateRenderer
 {
     public function __construct(
         private readonly Request $request,
-        private readonly MatchedUrlParametersMap $urlParameters,
     ) {
     }
 
@@ -190,8 +189,8 @@ class TemplateRenderer
 
         if (str_starts_with($templateDirective, 'qualify')) {
             $urlToQualify = substr($templateDirective, 8);
-            if ($this->urlParameters->has('version')) {
-                $urlToQualify = '/' . $this->urlParameters->get('version') . '/' . ltrim($urlToQualify, '/');
+            if (array_key_exists('version', $data)) {
+                $urlToQualify = '/' . $data['version'] . '/' . ltrim($urlToQualify, '/');
             }
 
             return $urlToQualify;
