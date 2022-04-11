@@ -10,7 +10,7 @@
 	Documentation
 </p>
 <ul class="menu-list">
-	{? import (('navs/' . $version) . '.html') }
+	{? import (('navs/' . ($version ?? 'develop')) . '.html') }
 </ul>
 <hr class="is-hidden-mobile has-background-grey-lighter" style="height: 1px">
 <a class="is-hidden-mobile" href="#">Back to top</a>
