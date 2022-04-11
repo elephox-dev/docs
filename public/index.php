@@ -24,6 +24,7 @@ $builder->services->addSingleton(Highlighter::class, implementationFactory: func
     $h = new Highlighter(false);
 
     Highlighter::registerLanguage('php', APP_ROOT . '/vendor/scrivo/highlight.php/Highlight/languages/php.json');
+    Highlighter::registerLanguage('bash', APP_ROOT . '/vendor/scrivo/highlight.php/Highlight/languages/bash.json');
 
     return $h;
 });
