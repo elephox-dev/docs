@@ -25,7 +25,7 @@ class Routes
             return $this->handleResource("public", $url, $pageRenderer);
         }
 
-        return $this->handleContent($contentFile, ['version' => 'develop', 'path' => $url], $pageRenderer);
+        return $this->handleContent($contentFile, ['version' => 'develop', 'branch' => 'develop', 'path' => $url], $pageRenderer);
     }
 
     #[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|develop)(?:\/(?<path>.*))?', 10)]
@@ -36,7 +36,7 @@ class Routes
             return $this->handleResource("public", (string)$request->getUrl(), $pageRenderer);
         }
 
-        return $this->handleContent($contentFile, ['version' => $version, 'path' => $path ?? ''], $pageRenderer);
+        return $this->handleContent($contentFile, ['version' => $version, 'branch' => $version === 'develop' ? 'develop' : ('release/' . $version), 'path' => $path ?? ''], $pageRenderer);
     }
 
     #[Get('regex:(?<url>vendor\/.*)', 10)]
