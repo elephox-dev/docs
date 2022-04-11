@@ -20,7 +20,13 @@ $builder->service(RequestRouter::class)->loadFromClass(Routes::class);
 $builder->services->addSingleton(ContentFiles::class);
 $builder->services->addSingleton(PageRenderer::class);
 $builder->services->addSingleton(TemplateRenderer::class);
-$builder->services->addSingleton(Highlighter::class);
+$builder->services->addSingleton(Highlighter::class, implementationFactory: function (): Highlighter {
+    $h = new Highlighter(false);
+
+    Highlighter::registerLanguage('php', APP_ROOT . './vendor/scrivo/highlight.php/Highlight/languages/php.json');
+
+    return $h;
+});
 $builder->services->addSingleton(Parsedown::class, ElephoxParsedown::class);
 $app = $builder->build();
 $app->run();
