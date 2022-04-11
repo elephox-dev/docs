@@ -17,9 +17,9 @@ use Elephox\Web\Routing\Attribute\Http\Get;
 class Routes
 {
     #[Any('regex:(?<url>.*)')]
-    public function handleAny(Request $request, PageRenderer $pageRenderer): ResponseBuilder
+    public function handleAny(string $url, PageRenderer $pageRenderer): ResponseBuilder
     {
-        $url = ltrim($request->getUrl()->path, '/');
+        $url = ltrim($url, '/');
         $contentFile = ContentFiles::findBestFit('develop', $url);
         if ($contentFile === null) {
             return $this->handleResource("public", $url, $pageRenderer);
@@ -28,15 +28,15 @@ class Routes
         return $this->handleContent($contentFile, ['version' => 'develop', $url], $pageRenderer);
     }
 
-    #[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|main|develop)(?:\/(?<path>.*))?', 10)]
-    public function handleGetVersionContent(Request $request, array $templateValues, PageRenderer $pageRenderer): ResponseBuilder
+    #[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|develop)(?:\/(?<path>.*))?', 10)]
+    public function handleGetVersionContent(Request $request, PageRenderer $pageRenderer, string $version, ?string $path = null): ResponseBuilder
     {
-        $contentFile = ContentFiles::findBestFit($templateValues['version'], $templateValues['path'] ?? '');
+        $contentFile = ContentFiles::findBestFit($version, $path ?? '');
         if ($contentFile === null) {
             return $this->handleResource("public", (string)$request->getUrl(), $pageRenderer);
         }
 
-        return $this->handleContent($contentFile, $templateValues, $pageRenderer);
+        return $this->handleContent($contentFile, ['version' => $version, 'path' => $path ?? ''], $pageRenderer);
     }
 
     #[Get('regex:\/(?<url>vendor\/.*)', 10)]

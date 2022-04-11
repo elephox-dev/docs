@@ -4,18 +4,24 @@ namespace Elephox\Docs;
 
 use ArrayIterator;
 use Elephox\Collection\Iterator\WhileIterator;
-use Elephox\Core\Handler\Contract\HandledRequest;
 use Elephox\Files\Path;
+use Elephox\Http\Contract\Request;
+use Elephox\Web\Routing\MatchedUrlParametersMap;
 use MultipleIterator;
 use NoRewindIterator;
 use RuntimeException;
 
 class TemplateRenderer
 {
-    public function __construct(private HandledRequest $request)
-    {
+    public function __construct(
+        private readonly Request $request,
+        private readonly MatchedUrlParametersMap $urlParameters,
+    ) {
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function loadData(string $path): array
     {
         if (!file_exists($path)) {
@@ -25,6 +31,9 @@ class TemplateRenderer
         return json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function render(string $name, array &$data): string
     {
         $templateFile = Path::join(__DIR__, '..', 'templates', $name . '.html');
@@ -35,6 +44,9 @@ class TemplateRenderer
         return $this->renderFile($templateFile, $data);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function renderFile(string $templatePath, array &$data): string
     {
         $template = file_get_contents($templatePath);
@@ -43,6 +55,9 @@ class TemplateRenderer
         return $this->evaluate($basePath, $template, $data);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function evaluate(string $basePath, string $template, array &$data): string
     {
         $loopVars = [
@@ -60,6 +75,9 @@ class TemplateRenderer
         return $result;
     }
 
+    /**
+     * @throws \JsonException
+     */
     private function evaluateInternal(string $basePath, string $template, array &$data, array &$loopVars): string
     {
         $lines = preg_split("/(?<=\n)(?!$)/", $template);
@@ -130,6 +148,9 @@ class TemplateRenderer
         return (string)substr_replace($haystack, (string)$replacement, (int)strpos($haystack, $needle), strlen($needle));
     }
 
+    /**
+     * @throws \JsonException
+     */
     private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): mixed
     {
         if (str_starts_with($templateDirective, '$')) {
@@ -164,9 +185,8 @@ class TemplateRenderer
 
         if (str_starts_with($templateDirective, 'qualify')) {
             $urlToQualify = substr($templateDirective, 8);
-            $matchedTemplate = $this->request->getMatchedTemplate();
-            if ($matchedTemplate->has('version')) {
-                $urlToQualify = '/' . $matchedTemplate->get('version') . '/' . ltrim($urlToQualify, '/');
+            if ($this->urlParameters->has('version')) {
+                $urlToQualify = '/' . $this->urlParameters->get('version') . '/' . ltrim($urlToQualify, '/');
             }
 
             return $urlToQualify;
@@ -198,10 +218,13 @@ class TemplateRenderer
         return null;
     }
 
-    /** @noinspection TypeUnsafeComparisonInspection */
+    /**
+     * @noinspection TypeUnsafeComparisonInspection
+     * @throws \JsonException
+     */
     private function evaluateExpression(string $expression, string $basePath, array &$data, array $loopVars): mixed
     {
-        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||\&\&|\?)\s+(.*)\s*\)$/', $expression, $matches);
+        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||&&|\?)\s+(.*)\s*\)$/', $expression, $matches);
         if (empty($matches)) {
             $value = $this->evaluateStatementDirectives(trim($expression, '()'), $basePath, $data, $loopVars);
             return $value ?? $this->evaluateExpressionPart($expression, $basePath, $data, $loopVars);
@@ -226,6 +249,9 @@ class TemplateRenderer
         return $operator($left, $right);
     }
 
+    /**
+     * @throws \JsonException
+     */
     private function evaluateExpressionPart(string $part, string $basePath, array $data, array $loopVars): mixed
     {
         if (str_starts_with($part, '(')) {

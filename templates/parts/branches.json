@@ -1,12 +1,12 @@
 {
     "branches": [
         {
-            "label": "develop (0.4.x-dev)",
+            "label": "develop (next)",
             "value": "develop"
         },
         {
-            "label": "main (1.x-dev)",
-            "value": "main"
+            "label": "0.3 (release/0.3)",
+            "value": "0.3"
         }
     ]
 }
