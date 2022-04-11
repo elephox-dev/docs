@@ -229,7 +229,7 @@ class TemplateRenderer
      */
     private function evaluateExpression(string $expression, string $basePath, array &$data, array $loopVars): mixed
     {
-        preg_match('/^\(\s*(.*)\s+(\+|-|\*|\/|%|==|!=|\|\||&&|\?|\.)\s+(.*)\s*\)$/', $expression, $matches);
+        preg_match('/\(([^()]*|(?R))\s(\+|-|\*|\/|%|\.|==|!=|\|\||&&|\?\??)\s([^()]*|(?R))\)/', $expression, $matches);
         if (empty($matches)) {
             $value = $this->evaluateStatementDirectives(trim($expression, '()'), $basePath, $data, $loopVars);
             return $value ?? $this->evaluateExpressionPart($expression, $basePath, $data, $loopVars);
@@ -248,6 +248,7 @@ class TemplateRenderer
             '||' => static fn ($left, $right) => $left || $right,
             '&&' => static fn ($left, $right) => $left && $right,
             '?' => static fn ($left, $right) => $left ? $right : null,
+            '??' => static fn ($left, $right) => $left ?? $right,
             default => throw new RuntimeException('Unknown operator: ' . $matches[2]),
         };
         $right = $this->evaluateExpressionPart($matches[3], $basePath, $data, $loopVars);
