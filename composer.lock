@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/framework.git",
-                "reference": "e7e30ed9c6d04d304a3e9f838559f95edc08e6e3"
+                "reference": "4139dc1d04021b6966ba58f74d106be9c4b45b24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/e7e30ed9c6d04d304a3e9f838559f95edc08e6e3",
-                "reference": "e7e30ed9c6d04d304a3e9f838559f95edc08e6e3",
+                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/4139dc1d04021b6966ba58f74d106be9c4b45b24",
+                "reference": "4139dc1d04021b6966ba58f74d106be9c4b45b24",
                 "shasum": ""
             },
             "require": {
@@ -30,6 +30,7 @@
                 "psr/cache": "^3.0",
                 "psr/container": "^2.0",
                 "ricardoboss/php-console-logger": "^2.1",
+                "symfony/process": "^6.0",
                 "vlucas/phpdotenv": "^5.4"
             },
             "provide": {
@@ -47,6 +48,7 @@
                 "elephox/http": "self.version",
                 "elephox/logging": "self.version",
                 "elephox/oor": "self.version",
+                "elephox/platform": "self.version",
                 "elephox/stream": "self.version",
                 "elephox/support": "self.version",
                 "elephox/web": "self.version"
@@ -64,7 +66,7 @@
                 "phpunit/phpunit": "^9.5",
                 "psalm/plugin-phpunit": "^0.16",
                 "roave/no-leaks": "^1.3",
-                "vimeo/psalm": "^5.0.0-alpha1"
+                "vimeo/psalm": "dev-master"
             },
             "suggest": {
                 "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())",
@@ -75,14 +77,14 @@
             "default-branch": true,
             "type": "library",
             "extra": {
+                "bin-dir": "./bin",
                 "branch-alias": {
                     "dev-develop": "0.4.x-dev",
                     "release/0.3": "0.3.x-dev"
                 },
                 "module-sync": {
                     "repository-base": "https://github.com/elephox-dev/"
-                },
-                "bin-dir": "./bin"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -97,6 +99,7 @@
                     "Elephox\\Console\\": "modules/Console/src/",
                     "Elephox\\Logging\\": "modules/Logging/src/",
                     "Elephox\\Support\\": "modules/Support/src/",
+                    "Elephox\\Platform\\": "modules/Platform/src/",
                     "Elephox\\Collection\\": "modules/Collection/src/",
                     "Elephox\\Autoloading\\": "modules/Autoloading/src/",
                     "Elephox\\Configuration\\": "modules/Configuration/src/"
@@ -116,27 +119,27 @@
             "homepage": "https://elephox.dev",
             "support": {
                 "issues": "https://github.com/elephox-dev/framework/issues",
-                "source": "https://github.com/elephox-dev/framework/tree/0.4.0-alpha2"
+                "source": "https://github.com/elephox-dev/framework/tree/develop"
             },
-            "time": "2022-04-12T11:11:33+00:00"
+            "time": "2022-04-26T22:49:47+00:00"
         },
         {
             "name": "elephox/mimey",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/mimey.git",
-                "reference": "84494e3288009585f4b4faf23c5e3431f4bc3597"
+                "reference": "24b7db2152e544272c051c4325f7829fbc7a08c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/84494e3288009585f4b4faf23c5e3431f4bc3597",
-                "reference": "84494e3288009585f4b4faf23c5e3431f4bc3597",
+                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/24b7db2152e544272c051c4325f7829fbc7a08c7",
+                "reference": "24b7db2152e544272c051c4325f7829fbc7a08c7",
                 "shasum": ""
             },
             "require": {
                 "jetbrains/phpstorm-attributes": "^1.0",
-                "php": "~8.1.0 || ~8.2.0"
+                "php": "^8.1 <8.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -169,9 +172,9 @@
             ],
             "description": "PHP package for converting file extensions to MIME types and vice versa.",
             "support": {
-                "source": "https://github.com/elephox-dev/mimey/tree/4.0.0"
+                "source": "https://github.com/elephox-dev/mimey/tree/4.0.1"
             },
-            "time": "2022-02-11T16:34:21+00:00"
+            "time": "2022-04-27T00:35:19+00:00"
         },
         {
             "name": "elephox/plane",
@@ -179,12 +182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/plane.git",
-                "reference": "6399232912634b77dee25c948a49ca5896adb8a6"
+                "reference": "e2de0ef66fb01cde21b2494eff3fbaebc9831d2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/plane/zipball/6399232912634b77dee25c948a49ca5896adb8a6",
-                "reference": "6399232912634b77dee25c948a49ca5896adb8a6",
+                "url": "https://api.github.com/repos/elephox-dev/plane/zipball/e2de0ef66fb01cde21b2494eff3fbaebc9831d2d",
+                "reference": "e2de0ef66fb01cde21b2494eff3fbaebc9831d2d",
                 "shasum": ""
             },
             "require": {
@@ -227,7 +230,7 @@
                 "issues": "https://github.com/elephox-dev/plane/issues",
                 "source": "https://github.com/elephox-dev/plane"
             },
-            "time": "2022-04-11T23:14:24+00:00"
+            "time": "2022-04-14T18:49:08+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -1550,6 +1553,67 @@
             "time": "2022-03-04T08:16:47+00:00"
         },
         {
+            "name": "symfony/process",
+            "version": "v6.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "e13f6757e267d687e20ec5b26ccfcbbe511cd8f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/e13f6757e267d687e20ec5b26ccfcbbe511cd8f4",
+                "reference": "e13f6757e267d687e20ec5b26ccfcbbe511cd8f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Process\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Executes commands in sub-processes",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/process/tree/v6.0.7"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-03-18T16:21:55+00:00"
+        },
+        {
             "name": "symfony/service-contracts",
             "version": "v3.0.1",
             "source": {
@@ -1804,12 +1868,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "21d0504612c544af1d8ce000e5e0301aa8bbde7c"
+                "reference": "e5e096c731d21614b952983804581389eb2a484f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/21d0504612c544af1d8ce000e5e0301aa8bbde7c",
-                "reference": "21d0504612c544af1d8ce000e5e0301aa8bbde7c",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e5e096c731d21614b952983804581389eb2a484f",
+                "reference": "e5e096c731d21614b952983804581389eb2a484f",
                 "shasum": ""
             },
             "conflict": {
@@ -1839,7 +1903,7 @@
                 "bk2k/bootstrap-package": ">=7.1,<7.1.2|>=8,<8.0.8|>=9,<9.0.4|>=9.1,<9.1.3|>=10,<10.0.10|>=11,<11.0.3",
                 "bmarshall511/wordpress_zero_spam": "<5.2.13",
                 "bolt/bolt": "<3.7.2",
-                "bolt/core": "<4.1.13",
+                "bolt/core": "<=4.2",
                 "bottelet/flarepoint": "<2.2.1",
                 "brightlocal/phpwhois": "<=4.2.5",
                 "buddypress/buddypress": "<7.2.1",
@@ -1857,7 +1921,7 @@
                 "codeigniter/framework": "<=3.0.6",
                 "codeigniter4/framework": "<4.1.9",
                 "codiad/codiad": "<=2.8.4",
-                "composer/composer": "<1.10.23|>=2-alpha.1,<2.1.9",
+                "composer/composer": "<1.10.26|>=2-alpha.1,<2.2.12|>=2.3,<2.3.5",
                 "concrete5/concrete5": "<9",
                 "concrete5/core": "<8.5.7",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
@@ -1927,6 +1991,7 @@
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "froala/wysiwyg-editor": "<3.2.7",
+                "froxlor/froxlor": "<=0.10.22",
                 "fuel/core": "<1.8.1",
                 "gaoming13/wechat-php-sdk": "<=1.10.2",
                 "genix/cms": "<=1.1.11",
@@ -2052,13 +2117,13 @@
                 "phpoffice/phpspreadsheet": "<1.16",
                 "phpseclib/phpseclib": "<2.0.31|>=3,<3.0.7",
                 "phpservermon/phpservermon": "<=3.5.2",
-                "phpunit/phpunit": "<4.8.28|>=5,<5.6.3",
+                "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
                 "pimcore/data-hub": "<1.2.4",
                 "pimcore/pimcore": "<10.4",
                 "pocketmine/bedrock-protocol": "<8.0.2",
-                "pocketmine/pocketmine-mp": "<4.2.4",
+                "pocketmine/pocketmine-mp": "<4.2.9",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
@@ -2086,8 +2151,8 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
-                "shopware/core": "<=6.4.8.1",
-                "shopware/platform": "<=6.4.8.1",
+                "shopware/core": "<=6.4.9",
+                "shopware/platform": "<=6.4.9",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<5.7.7",
                 "shopware/storefront": "<=6.4.8.1",
@@ -2111,7 +2176,7 @@
                 "simplito/elliptic-php": "<1.0.6",
                 "slim/slim": "<2.6",
                 "smarty/smarty": "<3.1.43|>=4,<4.0.3",
-                "snipe/snipe-it": "<= 6.0.0-RC-5|<5.3.11",
+                "snipe/snipe-it": "<5.4.2|>= 6.0.0-RC-1, <= 6.0.0-RC-5",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "spipu/html2pdf": "<5.2.4",
@@ -2278,7 +2343,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-12T22:04:11+00:00"
+            "time": "2022-04-22T22:04:12+00:00"
         }
     ],
     "aliases": [],
