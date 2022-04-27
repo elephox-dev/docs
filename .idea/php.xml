@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpAnalysisConfiguration" call_tree_analysis_depth="2" />
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/erusev/parsedown" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/elephox/framework" />
+      <path value="$PROJECT_DIR$/vendor/jetbrains/phpstorm-attributes" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/bundle/ruby" />
+      <path value="$PROJECT_DIR$/vendor/ricardoboss/php-console-logger" />
+      <path value="$PROJECT_DIR$/vendor/keinos/parsedown-toc" />
+      <path value="$PROJECT_DIR$/vendor/erusev/parsedown-extra" />
+      <path value="$PROJECT_DIR$/vendor/scrivo/highlight.php" />
+      <path value="$PROJECT_DIR$/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
+</project>

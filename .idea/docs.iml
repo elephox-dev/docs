@@ -25,7 +25,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/plane" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jetbrains/phpstorm-attributes" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/framework" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/mimey" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/scrivo/highlight.php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/erusev/parsedown-extra" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/erusev/parsedown" />
