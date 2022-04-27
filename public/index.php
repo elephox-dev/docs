@@ -4,6 +4,7 @@ declare(strict_types=1);
 define('APP_ROOT', dirname(__DIR__));
 require_once APP_ROOT . '/vendor/autoload.php';
 
+use Elephox\Builder\Whoops\AddsWhoopsMiddleware;
 use Elephox\Docs\ContentFiles;
 use Elephox\Docs\ElephoxParsedown;
 use Elephox\Docs\PageRenderer;
@@ -15,7 +16,11 @@ use Elephox\Web\Routing\RequestRouter;
 use Elephox\Web\WebApplicationBuilder;
 use Highlight\Highlighter;
 
-$builder = WebApplicationBuilder::create();
+class WebBuilder extends WebApplicationBuilder {
+	use AddsWhoopsMiddleware;
+}
+
+$builder = WebBuilder::create();
 if ($builder->environment->development) {
 	$builder->addWhoops();
 } else {

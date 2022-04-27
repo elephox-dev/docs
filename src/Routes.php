@@ -12,10 +12,14 @@ use Elephox\Support\CustomMimeType;
 use Elephox\Web\Routing\Attribute\Controller;
 use Elephox\Web\Routing\Attribute\Http\Any;
 use Elephox\Web\Routing\Attribute\Http\Get;
+use JsonException;
 
-#[Controller('/')]
+#[Controller('')]
 class Routes
 {
+	/**
+	 * @throws JsonException
+	 */
 	#[Any('regex:(?<url>.*)')]
 	public function handleAny(string $url, PageRenderer $pageRenderer): ResponseBuilder
 	{
@@ -28,6 +32,9 @@ class Routes
 		return $this->handleContent($contentFile, ['version' => 'develop', 'branch' => 'develop', 'path' => $url], $pageRenderer);
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	#[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|develop)(?:\/(?<path>.*))?', 10)]
 	public function handleGetVersionContent(Request $request, PageRenderer $pageRenderer, string $version, ?string $path = null): ResponseBuilder
 	{
@@ -39,12 +46,18 @@ class Routes
 		return $this->handleContent($contentFile, ['version' => $version, 'branch' => $version === 'develop' ? 'develop' : ('release/' . $version), 'path' => $path ?? ''], $pageRenderer);
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	#[Get('regex:(?<url>vendor\/.*)', 10)]
 	public function handleVendor(string $url, PageRenderer $pageRenderer): ResponseBuilder
 	{
 		return $this->handleResource("", $url, $pageRenderer);
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	private function handleContent(string $contentFile, array $templateValue, PageRenderer $pageRenderer): ResponseBuilder
 	{
 		$body = $pageRenderer->render($contentFile, $templateValue);
@@ -54,10 +67,13 @@ class Routes
 			->htmlBody($body);
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	private function handleResource(string $parent, string $url, PageRenderer $pageRenderer): ResponseBuilder
 	{
 		$resourcePath = Path::join(__DIR__, "..", $parent, ltrim($url, '/'));
-		if (is_file($resourcePath) && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($resourcePath))) {
+		if (is_file($resourcePath)) {
 			return Response::build()
 				->responseCode(ResponseCode::OK)
 				->fileBody($resourcePath, CustomMimeType::fromFile($resourcePath))
@@ -67,6 +83,9 @@ class Routes
 		return $this->notFound($url, $pageRenderer);
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	private function notFound(string $requestedUrl, PageRenderer $pageRenderer): ResponseBuilder
 	{
 		$notFoundFile = Path::join(__DIR__, "..", "content", "not-found.md");
