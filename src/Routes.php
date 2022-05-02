@@ -76,7 +76,7 @@ class Routes
 		if (is_file($resourcePath)) {
 			return Response::build()
 				->responseCode(ResponseCode::OK)
-				->fileBody($resourcePath, CustomMimeType::fromFile($resourcePath))
+				->fileBody($resourcePath, CustomMimeType::fromFilename($resourcePath))
 			;
 		}
 
