@@ -5,6 +5,14 @@
             "value": "develop"
         },
         {
+            "label": "0.5 (release/0.5)",
+            "value": "0.5"
+        },
+        {
+            "label": "0.4 (release/0.4)",
+            "value": "0.4"
+        },
+        {
             "label": "0.3 (release/0.3)",
             "value": "0.3"
         }
