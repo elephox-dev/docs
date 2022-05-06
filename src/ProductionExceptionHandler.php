@@ -8,6 +8,7 @@ use Elephox\Files\Path;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\ResponseCode;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
+use JsonException;
 
 class ProductionExceptionHandler extends DefaultExceptionHandler
 {
@@ -16,6 +17,9 @@ class ProductionExceptionHandler extends DefaultExceptionHandler
 	) {
 	}
 
+	/**
+	 * @throws JsonException
+	 */
 	protected function setResponseBody(ResponseBuilder $response): ResponseBuilder
 	{
 		$internalServerErrorFile = Path::join(APP_ROOT, "content", "internal-server-error.md");
