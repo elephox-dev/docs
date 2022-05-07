@@ -12,7 +12,10 @@ use Elephox\Support\CustomMimeType;
 use Elephox\Web\Routing\Attribute\Controller;
 use Elephox\Web\Routing\Attribute\Http\Any;
 use Elephox\Web\Routing\Attribute\Http\Get;
+use Elephox\Web\Routing\Attribute\Http\Post;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 use JsonException;
+use ricardoboss\WebhookTweeter\WebhookTweeterHandler;
 
 #[Controller('')]
 class Routes
@@ -53,6 +56,20 @@ class Routes
 	public function handleVendor(string $url, PageRenderer $pageRenderer): ResponseBuilder
 	{
 		return $this->handleResource("", $url, $pageRenderer);
+	}
+
+	#[Post('webhook/tweeter')]
+	public function handleWebhook(Request $request, WebhookTweeterHandler $handler): ResponseBuilder
+	{
+		$psr7Request = new Psr7Request($request->getMethod()->value, (string) $request->getUrl(), $request->getHeaderMap()->toArray(), $request->getBody(), $request->getProtocolVersion());
+
+		$result = $handler->handle($psr7Request);
+
+		if (!$result->success) {
+			return Response::build()->responseCode(ResponseCode::UnprocessableContent)->jsonBody(['error' => $result->message]);
+		}
+
+		return Response::build()->responseCode(ResponseCode::OK)->jsonBody(['url' => sprintf("https://twitter.com/elephox_php/status/%s", $result->tweet->data->id)]);
 	}
 
 	/**

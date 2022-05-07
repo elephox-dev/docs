@@ -1,0 +1,13 @@
+{
+  "webhook-tweeter": {
+    "endpoint": "/webhook/tweeter",
+    "secret": "${WEBHOOK_TWEETER_SECRET}"
+  },
+  "twitter": {
+    "api-key": "${TWITTER_API_KEY}",
+    "api-secret": "${TWITTER_API_SECRET}",
+    "bearer-token": "${TWITTER_BEARER_TOKEN}",
+    "token-identifier": "${TWITTER_TOKEN_IDENTIFIER}",
+    "token-secret": "${TWITTER_TOKEN_SECRET}"
+  }
+}
