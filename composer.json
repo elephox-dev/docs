@@ -17,7 +17,7 @@
         "erusev/parsedown-extra": "^0.8",
         "keinos/parsedown-toc": "^1.1",
         "nunomaduro/collision": "^6.2",
-        "ricardoboss/webhook-tweeter": "^0.3",
+        "ricardoboss/webhook-tweeter": "^0.4",
         "scrivo/highlight.php": "9.18.1.9"
     },
     "require-dev": {

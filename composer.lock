@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acecef089e26cde1a9caef0876005ae0",
+    "content-hash": "bc84fdec5b0a14ec0e2a399730a5ac12",
     "packages": [
         {
             "name": "coderjerk/bird-elephant",
-            "version": "dev-main",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danieldevine/bird-elephant.git",
-                "reference": "57a29e4497f5d75ced819fb718372d1a3795b15f"
+                "reference": "81a9afd656df3a09bc216894260083c4e6667b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danieldevine/bird-elephant/zipball/57a29e4497f5d75ced819fb718372d1a3795b15f",
-                "reference": "57a29e4497f5d75ced819fb718372d1a3795b15f",
+                "url": "https://api.github.com/repos/danieldevine/bird-elephant/zipball/81a9afd656df3a09bc216894260083c4e6667b7c",
+                "reference": "81a9afd656df3a09bc216894260083c4e6667b7c",
                 "shasum": ""
             },
             "require": {
@@ -30,7 +30,6 @@
                 "symfony/var-dumper": "^5.1",
                 "vlucas/phpdotenv": "^5.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -50,7 +49,7 @@
             "description": "A simple library to request data from the Twitter APIv2 endpoints",
             "support": {
                 "issues": "https://github.com/danieldevine/bird-elephant/issues",
-                "source": "https://github.com/danieldevine/bird-elephant/tree/main"
+                "source": "https://github.com/danieldevine/bird-elephant/tree/v0.4.3"
             },
             "funding": [
                 {
@@ -58,7 +57,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-04-14T15:09:45+00:00"
+            "time": "2022-01-30T15:04:26+00:00"
         },
         {
             "name": "elephox/builder-whoops-handler",
@@ -1644,20 +1643,20 @@
         },
         {
             "name": "ricardoboss/webhook-tweeter",
-            "version": "v0.3",
+            "version": "v0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ricardoboss/webhook-tweeter.git",
-                "reference": "23f4f71b3dea34a9e860a96c5201fa5d786db6b7"
+                "reference": "7ecef583dfe675dd03747cc97524520abde0c97b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricardoboss/webhook-tweeter/zipball/23f4f71b3dea34a9e860a96c5201fa5d786db6b7",
-                "reference": "23f4f71b3dea34a9e860a96c5201fa5d786db6b7",
+                "url": "https://api.github.com/repos/ricardoboss/webhook-tweeter/zipball/7ecef583dfe675dd03747cc97524520abde0c97b",
+                "reference": "7ecef583dfe675dd03747cc97524520abde0c97b",
                 "shasum": ""
             },
             "require": {
-                "coderjerk/bird-elephant": "dev-main",
+                "coderjerk/bird-elephant": "^0.4",
                 "php": "^8.1",
                 "psr/http-message": "^1.0"
             },
@@ -1682,11 +1681,12 @@
                     "email": "contact@ricardoboss.de"
                 }
             ],
+            "description": "Validating and parsing of GitHub webhook requests and posting to Twitter",
             "support": {
                 "issues": "https://github.com/ricardoboss/webhook-tweeter/issues",
-                "source": "https://github.com/ricardoboss/webhook-tweeter/tree/v0.3"
+                "source": "https://github.com/ricardoboss/webhook-tweeter/tree/v0.4"
             },
-            "time": "2022-05-07T20:22:57+00:00"
+            "time": "2022-05-08T09:07:41+00:00"
         },
         {
             "name": "scrivo/highlight.php",
