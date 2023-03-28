@@ -37,5 +37,5 @@ $app = $builder->build();
 try {
 	$app->run();
 } catch (Throwable $e) {
-	$app->services->get(ExceptionHandler::class)->handleException($e);
+	$app->exceptionHandler()->handleException($e);
 }
