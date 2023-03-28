@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Elephox\Builder\Whoops\AddsWhoopsHandler;
 use Elephox\Console\ConsoleApplicationBuilder;
 use Elephox\DI\Contract\ServiceCollection;
-use Elephox\Support\Contract\ExceptionHandler;
+use Elephox\Docs\Routes;
 use Elephox\Web\Routing\Contract\Router;
 use Elephox\Web\Routing\RequestRouter;
 
@@ -26,7 +26,7 @@ $builder->commands->loadFromNamespace("App\\Commands");
 
 // Add the request router, so we can use it in commands
 $builder->services->addSingleton(Router::class, RequestRouter::class, function (ServiceCollection $services): RequestRouter {
-	return (new RequestRouter($services))->loadFromNamespace('App\\Routes');
+	return (new RequestRouter($services))->loadFromClass(Routes::class);
 });
 
 // Load commands
