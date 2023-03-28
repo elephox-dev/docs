@@ -25,12 +25,4 @@ class PageRenderer
 
 		return $this->templateRenderer->render($template, $data);
 	}
-
-	/**
-	 * @throws JsonException
-	 */
-	public function stream(string $contentFilePath, array $data, string $template = "default"): Stream
-	{
-		return new StringStream($this->render($contentFilePath, $data, $template));
-	}
 }
