@@ -88,28 +88,28 @@ gantt
   axisFormat %Y-%m
 
   section Elephox 0.x
-  Development           :active, d0-0, 2021-11-01, 2023-02-01
+  Development           :active, d0-0, 2021-11-01, 2024-01-01
 
-  section Elephox 1.0
-  Release 1.0           :milestone, m1-0, after d0-0, 0
-  Features              :active,    f1-0, after d0-0, 90d
-  Fixes                 :crit,      b1-0, after d0-0, 180d
-
-  section Elephox 1.1
-  Release 1.1           :milestone, m1-1, after f1-0, 0
-  Features              :active,    f1-1, after f1-0, 90d
-  Fixes                 :crit,      b1-1, after f1-0, 180d
-
-  section Elephox 1.2
-  Release 1.2           :milestone, m1-2, after f1-1, 0
-  Features              :active,    f1-2, after f1-1, 180d
-  Fixes                 :crit,      b1-2, after f1-1, 270d
-
-  section Elephox 2.0
-  Release 2.0           :milestone, m2-0, after f1-2, 0
-  Features              :active,    f2-0, after f1-2, 270d
-  Fixes                 :crit,      b2-0, after f1-2, 365d
-
-  section Elephox 2.1
-  Release 2.1           :milestone, m2-1, after f2-0, 0
+%%  section Elephox 1.0
+%%  Release 1.0           :milestone, m1-0, after d0-0, 0
+%%  Features              :active,    f1-0, after d0-0, 90d
+%%  Fixes                 :crit,      b1-0, after d0-0, 180d
+%%
+%%  section Elephox 1.1
+%%  Release 1.1           :milestone, m1-1, after f1-0, 0
+%%  Features              :active,    f1-1, after f1-0, 90d
+%%  Fixes                 :crit,      b1-1, after f1-0, 180d
+%%
+%%  section Elephox 1.2
+%%  Release 1.2           :milestone, m1-2, after f1-1, 0
+%%  Features              :active,    f1-2, after f1-1, 180d
+%%  Fixes                 :crit,      b1-2, after f1-1, 270d
+%%
+%%  section Elephox 2.0
+%%  Release 2.0           :milestone, m2-0, after f1-2, 0
+%%  Features              :active,    f2-0, after f1-2, 270d
+%%  Fixes                 :crit,      b2-0, after f1-2, 365d
+%%
+%%  section Elephox 2.1
+%%  Release 2.1           :milestone, m2-1, after f2-0, 0
 ```
