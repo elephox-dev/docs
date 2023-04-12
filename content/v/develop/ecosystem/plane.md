@@ -11,6 +11,8 @@
 
 ---
 
+Homepage: [github.com/elephox-dev/plane](https://github.com/elephox-dev/plane)
+
 > Plane is a wrapper script for `docker-compose`.
 > It has some useful commands to aid you during the development of your Elephox applications and enables you to move your Elephox app to a containerized environment.
 
