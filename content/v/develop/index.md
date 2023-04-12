@@ -13,3 +13,5 @@ Here you can find information about the framework and its documentation.
 This version of the documentation is for the **[`{?$branch}` branch](https://github.com/elephox-dev/framework/tree/{?$branch})**.
 </div>
 </div>
+
+Get started by heading to [Getting Started]({?qualify:/getting-started}).
