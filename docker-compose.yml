@@ -3,7 +3,7 @@ version: '3'
 services:
     elephox:
         build:
-            context: ./vendor/elephox/plane/runtimes/8.2
+            context: ./docker
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
