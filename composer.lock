@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/framework.git",
-                "reference": "5a1a724eed64a6bfb633a039abed843b43280205"
+                "reference": "9635a6f57440c7bdaacfd74dc413406e4b0cbb3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/5a1a724eed64a6bfb633a039abed843b43280205",
-                "reference": "5a1a724eed64a6bfb633a039abed843b43280205",
+                "url": "https://api.github.com/repos/elephox-dev/framework/zipball/9635a6f57440c7bdaacfd74dc413406e4b0cbb3d",
+                "reference": "9635a6f57440c7bdaacfd74dc413406e4b0cbb3d",
                 "shasum": ""
             },
             "require": {
@@ -212,7 +212,6 @@
             "require-dev": {
                 "brianium/paratest": "^6.7",
                 "doctrine/orm": "^2.11",
-                "elephox/builder-swagger": "dev-main",
                 "elephox/builder-whoops-handler": "dev-develop",
                 "elephox/builder-whoops-middleware": "dev-develop",
                 "elephox/composer-module-sync": "^1.5",
@@ -287,7 +286,7 @@
                 "issues": "https://github.com/elephox-dev/framework/issues",
                 "source": "https://github.com/elephox-dev/framework"
             },
-            "time": "2023-04-13T00:01:22+00:00"
+            "time": "2023-04-13T06:29:47+00:00"
         },
         {
             "name": "elephox/mimey",
