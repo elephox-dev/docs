@@ -13,8 +13,6 @@ There are a few concepts you should learn, before you dive deeper into Elephox:
 
 - Elephox [Collections]
 - Service [Container]s
-- [Contexts & Handlers]
 
 [Collections]: {?qualify:/concepts/collections}
 [Container]: {?qualify:/concepts/container}
-[Contexts & Handlers]: {?qualify:/concepts/contexts-and-handlers}
