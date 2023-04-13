@@ -14,4 +14,8 @@ This version of the documentation is for the **[`{?$branch}` branch](https://git
 </div>
 </div>
 
-Get started by heading to [Getting Started]({?qualify:/getting-started}).
+New here? Head over to the [Introduction]({?qualify:/introduction}).
+
+Want to jump to coding? Go to [Getting Started]({?qualify:/getting-started}).
+
+Need help or a reference how to use Elephox? Take a look at the [Guide]({?qualify:/guide}).
