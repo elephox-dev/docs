@@ -4,7 +4,7 @@ services:
     elephox:
         build:
             context: .
-            dockerfile: docker/Dockerfile
+            dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
         extra_hosts:

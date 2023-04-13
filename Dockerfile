@@ -43,9 +43,9 @@ RUN setcap "cap_net_bind_service=+ep" /usr/local/bin/php
 RUN groupadd --force -g $WWWGROUP plane
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 plane
 
-COPY start-container.sh /usr/local/bin/start-container.sh
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini $PHP_INI_DIR/conf.d/99-plane.ini
+COPY docker/start-container.sh /usr/local/bin/start-container.sh
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/php.ini $PHP_INI_DIR/conf.d/99-plane.ini
 RUN chmod +x /usr/local/bin/start-container.sh
 
 EXPOSE 8000
