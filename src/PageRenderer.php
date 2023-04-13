@@ -2,15 +2,14 @@
 
 namespace Elephox\Docs;
 
-use Elephox\Stream\Contract\Stream;
-use Elephox\Stream\StringStream;
+use Elephox\Files\File;
 use JsonException;
 
-class PageRenderer
+readonly class PageRenderer
 {
 	public function __construct(
-		private readonly ContentFiles $contentFileRenderer,
-		private readonly TemplateRenderer $templateRenderer,
+		private ContentFiles $contentFileRenderer,
+		private TemplateRenderer $templateRenderer,
 	)
 	{
 	}
@@ -18,9 +17,9 @@ class PageRenderer
 	/**
 	 * @throws JsonException
 	 */
-	public function render(string $contentFilePath, array $data, string $template = "default"): string
+	public function render(File $contentFile, array $data, string $template = "default"): string
 	{
-		$content = $this->contentFileRenderer->render($contentFilePath, $data);
+		$content = $this->contentFileRenderer->render($contentFile, $data);
 		$data = array_merge($data, ['content' => $content]);
 
 		return $this->templateRenderer->render($template, $data);

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 use Elephox\Builder\Whoops\AddsWhoopsHandler;
 use Elephox\Console\ConsoleApplicationBuilder;
-use Elephox\DI\Contract\ServiceCollection;
+use Elephox\DI\Contract\Resolver;
 use Elephox\Docs\Routes;
+use Elephox\Web\Routing\ClassRouteLoader;
 use Elephox\Web\Routing\Contract\Router;
-use Elephox\Web\Routing\RequestRouter;
+use Elephox\Web\Routing\RegexRouter;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
@@ -25,8 +26,12 @@ $builder->addWhoops();
 $builder->commands->loadFromNamespace("App\\Commands");
 
 // Add the request router, so we can use it in commands
-$builder->services->addSingleton(Router::class, RequestRouter::class, function (ServiceCollection $services): RequestRouter {
-	return (new RequestRouter($services))->loadFromClass(Routes::class);
+$builder->services->addSingleton(Router::class, RegexRouter::class, function (Resolver $resolver): RegexRouter {
+	$router = new RegexRouter();
+
+	$router->addLoader(new ClassRouteLoader(Routes::class, $resolver));
+
+	return $router;
 });
 
 // Load commands

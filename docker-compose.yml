@@ -1,16 +1,16 @@
-# For more information: https://elephox.dev/ecosystem/plane
+# For more information: https://github.com/elephox-dev/plane
 version: '3'
 services:
     elephox:
         build:
-            context: ./vendor/elephox/plane/runtimes/8.1
+            context: ./vendor/elephox/plane/runtimes/8.2
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:80'
+            - '${APP_PORT:-8000}:8000'
         environment:
             WWWUSER: '${WWWUSER}'
             ELEPHOX_PLANE: 1

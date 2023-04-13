@@ -10,10 +10,10 @@
         }
     ],
     "require": {
-        "php": "^8.1 <8.3",
-        "elephox/builder-whoops-handler": "^0.1",
-        "elephox/builder-whoops-middleware": "^0.1",
-        "elephox/framework": "^0.5",
+        "php": "^8.2 <8.4",
+        "elephox/builder-whoops-handler": "dev-develop",
+        "elephox/builder-whoops-middleware": "dev-develop",
+        "elephox/framework": "dev-develop",
         "erusev/parsedown-extra": "dev-php-8.2-fix",
         "keinos/parsedown-toc": "^1.1",
         "nunomaduro/collision": "^6.2",
@@ -27,7 +27,7 @@
         }
     ],
     "require-dev": {
-        "elephox/plane": "^2.0",
+        "elephox/plane": "dev-develop",
         "roave/security-advisories": "dev-latest"
     },
     "minimum-stability": "dev",

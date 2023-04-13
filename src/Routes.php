@@ -3,81 +3,78 @@ declare(strict_types=1);
 
 namespace Elephox\Docs;
 
+use Elephox\Configuration\Contract\Environment;
+use Elephox\Files\File;
 use Elephox\Files\Path;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
-use Elephox\Support\CustomMimeType;
 use Elephox\Web\Routing\Attribute\Controller;
-use Elephox\Web\Routing\Attribute\Http\Any;
 use Elephox\Web\Routing\Attribute\Http\Get;
-use Elephox\Web\Routing\Attribute\Http\Post;
-use GuzzleHttp\Psr7\Request as Psr7Request;
 use JsonException;
-use ricardoboss\WebhookTweeter\WebhookTweeterHandler;
 
-#[Controller('')]
-class Routes
+#[Controller]
+readonly class Routes
 {
-	/**
-	 * @throws JsonException
-	 */
-	#[Any('regex:(?<url>.*)')]
-	public function handleAny(string $url, PageRenderer $pageRenderer): ResponseBuilder
-	{
-		$url = ltrim($url, '/');
-		$contentFile = ContentFiles::findBestFit('develop', $url);
-		if ($contentFile === null) {
-			return $this->handleResource("public", $url, $pageRenderer);
-		}
+	public function __construct(
+		private Environment $environment,
+		private PageRenderer $pageRenderer,
+	) {}
 
-		return $this->handleContent($contentFile, ['version' => 'develop', 'branch' => 'develop', 'path' => $url], $pageRenderer);
+//	/**
+//	 * @throws JsonException
+//	 */
+//	#[Any('{url:*}')]
+//	public function handleAny(string $url, PageRenderer $pageRenderer): ResponseBuilder
+//	{
+//		$url = ltrim($url, '/');
+//		$contentFile = ContentFiles::findBestFit('develop', $url);
+//		if ($contentFile === null) {
+//			return $this->handleResource("public", $url, $pageRenderer);
+//		}
+//
+//		return $this->handleContent($contentFile, ['version' => 'develop', 'branch' => 'develop', 'path' => $url], $pageRenderer);
+//	}
+	#[Get]
+	public function handleIndex(): ResponseBuilder
+	{
+		return Response::build()->redirect("/v/develop");
 	}
 
 	/**
 	 * @throws JsonException
 	 */
-	#[Get('regex:(?<version>\d+\.\d+(?:\.\d+)?|develop)(?:\/(?<path>.*))?', 10)]
-	public function handleGetVersionContent(Request $request, PageRenderer $pageRenderer, string $version, ?string $path = null): ResponseBuilder
+	#[Get('v/{version}/?{path:*}')]
+	public function handleGetVersionContent(Request $request, string $version, ?string $path = null): ResponseBuilder
 	{
+		if (!ContentFiles::availableVersions()->contains($version)) {
+			return $this->notFound((string)$request->getUrl());
+		}
+
 		$contentFile = ContentFiles::findBestFit($version, $path ?? '');
 		if ($contentFile === null) {
-			return $this->handleResource("public", (string)$request->getUrl(), $pageRenderer);
+			return $this->notFound((string)$request->getUrl());
 		}
 
-		return $this->handleContent($contentFile, ['version' => $version, 'branch' => $version === 'develop' ? 'develop' : ('release/' . $version), 'path' => $path ?? ''], $pageRenderer);
+		return $this->handleContent($contentFile, ['version' => $version, 'branch' => $version === 'develop' ? 'develop' : ('release/' . $version), 'path' => $path ?? '']);
 	}
 
 	/**
 	 * @throws JsonException
 	 */
-	#[Get('regex:(?<url>vendor\/.*)', 10)]
-	public function handleVendor(string $url, PageRenderer $pageRenderer): ResponseBuilder
+	#[Get('vendor/{url:*}')]
+	public function handleVendor(string $url): ResponseBuilder
 	{
-		return $this->handleResource("", $url, $pageRenderer);
-	}
-
-	#[Post('webhook/tweeter')]
-	public function handleWebhook(Request $request, WebhookTweeterHandler $handler): ResponseBuilder
-	{
-		$psr7Request = new Psr7Request($request->getMethod()->value, (string) $request->getUrl(), $request->getHeaderMap()->toArray(), $request->getBody(), $request->getProtocolVersion());
-
-		$result = $handler->handle($psr7Request);
-
-		if (!$result->success) {
-			return Response::build()->responseCode(ResponseCode::UnprocessableContent)->jsonBody(['error' => $result->message]);
-		}
-
-		return Response::build()->responseCode(ResponseCode::OK)->jsonBody(['url' => sprintf("https://twitter.com/elephox_php/status/%s", $result->tweet->data->id)]);
+		return $this->handleResource("vendor", $url);
 	}
 
 	/**
 	 * @throws JsonException
 	 */
-	private function handleContent(string $contentFile, array $templateValue, PageRenderer $pageRenderer): ResponseBuilder
+	private function handleContent(File $contentFile, array $templateValue): ResponseBuilder
 	{
-		$body = $pageRenderer->render($contentFile, $templateValue);
+		$body = $this->pageRenderer->render($contentFile, $templateValue);
 
 		return Response::build()
 			->responseCode(ResponseCode::OK)
@@ -87,29 +84,24 @@ class Routes
 	/**
 	 * @throws JsonException
 	 */
-	private function handleResource(string $parent, string $url, PageRenderer $pageRenderer): ResponseBuilder
+	private function handleResource(string $parent, string $url): ResponseBuilder
 	{
-		$resourcePath = Path::join(__DIR__, "..", $parent, ltrim($url, '/'));
-		if (is_file($resourcePath)) {
-			return Response::build()
-				->responseCode(ResponseCode::OK)
-				->fileBody($resourcePath, CustomMimeType::fromFilename($resourcePath))
-			;
+		$resource = new File(Path::join($this->environment->root()->path(), $parent, ltrim($url, '/')));
+		if ($resource->exists()) {
+			return Response::build()->ok()->fileBody($resource);
 		}
 
-		return $this->notFound($url, $pageRenderer);
+		return $this->notFound($url);
 	}
 
 	/**
 	 * @throws JsonException
 	 */
-	private function notFound(string $requestedUrl, PageRenderer $pageRenderer): ResponseBuilder
+	private function notFound(string $requestedUrl): ResponseBuilder
 	{
-		$notFoundFile = Path::join(__DIR__, "..", "content", "not-found.md");
-		$body = $pageRenderer->render($notFoundFile, ['url' => $requestedUrl, 'title' => 'Not Found']);
+		$notFoundFile = new File(Path::join(__DIR__, "..", "content", "not-found.md"));
+		$body = $this->pageRenderer->render($notFoundFile, ['url' => $requestedUrl, 'title' => 'Not Found', 'version' => 'develop']);
 
-		return Response::build()
-			->responseCode(ResponseCode::NotFound)
-			->htmlBody($body);
+		return Response::build()->notFound()->htmlBody($body);
 	}
 }

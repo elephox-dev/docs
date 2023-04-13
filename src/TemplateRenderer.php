@@ -4,6 +4,8 @@ namespace Elephox\Docs;
 
 use ArrayIterator;
 use Elephox\Collection\Iterator\WhileIterator;
+use Elephox\Files\Directory;
+use Elephox\Files\File;
 use Elephox\Files\Path;
 use Elephox\Http\Contract\Request;
 use JsonException;
@@ -11,10 +13,10 @@ use MultipleIterator;
 use NoRewindIterator;
 use RuntimeException;
 
-class TemplateRenderer
+readonly class TemplateRenderer
 {
 	public function __construct(
-		private readonly Request $request,
+		private Request $request,
 	)
 	{
 	}
@@ -22,13 +24,13 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	public function loadData(string $path): array
+	public function loadData(File $dataFile): array
 	{
-		if (!file_exists($path)) {
-			throw new RuntimeException('File not found: ' . $path);
+		if (!$dataFile->exists()) {
+			throw new RuntimeException('File not found: ' . $dataFile->path());
 		}
 
-		return json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+		return json_decode($dataFile->contents(), true, flags: JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -36,9 +38,9 @@ class TemplateRenderer
 	 */
 	public function render(string $name, array &$data): string
 	{
-		$templateFile = Path::join(__DIR__, '..', 'templates', $name . '.html');
-		if (!file_exists($templateFile)) {
-			throw new RuntimeException('Template not found: ' . $templateFile);
+		$templateFile = new File(Path::join(__DIR__, '..', 'templates', $name . '.html'));
+		if (!$templateFile->exists()) {
+			throw new RuntimeException('Template not found: ' . $templateFile->path());
 		}
 
 		return $this->renderFile($templateFile, $data);
@@ -47,14 +49,14 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	public function renderFile(string $templatePath, array &$data): string
+	public function renderFile(File $templateFile, array &$data): string
 	{
-		if (!is_file($templatePath)) {
-			throw new RuntimeException('File to render not found: ' . $templatePath);
+		if (!$templateFile->exists()) {
+			throw new RuntimeException('File to render not found: ' . $templateFile->path());
 		}
 
-		$template = file_get_contents($templatePath);
-		$basePath = dirname($templatePath);
+		$template = $templateFile->contents();
+		$basePath = $templateFile->parent();
 
 		return $this->evaluate($basePath, $template, $data);
 	}
@@ -62,7 +64,7 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	public function evaluate(string $basePath, string $template, array &$data): string
+	public function evaluate(Directory $baseDir, string $template, array &$data): string
 	{
 		$loopVars = [
 			'nestLevel' => 0,
@@ -70,7 +72,7 @@ class TemplateRenderer
 			'loopVarValues' => [],
 		];
 
-		$result = $this->evaluateInternal($basePath, $template, $data, $loopVars);
+		$result = $this->evaluateInternal($baseDir, $template, $data, $loopVars);
 
 		if ($loopVars['nestLevel'] !== 0) {
 			throw new RuntimeException("Not all loops were closed!");
@@ -82,7 +84,7 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	private function evaluateInternal(string $basePath, string $template, array &$data, array &$loopVars): string
+	private function evaluateInternal(Directory $baseDir, string $template, array &$data, array &$loopVars): string
 	{
 		$lines = preg_split("/(?<=\n)(?!$)/", $template);
 		$lineIterator = new ArrayIterator($lines);
@@ -129,7 +131,7 @@ class TemplateRenderer
 					foreach ($loopVars['loopVarValues'][$loopVars['nestLevel'] - 1] as $var) {
 						$data[$loopVarName] = $var;
 
-						$replacement .= $this->evaluateInternal($basePath, implode("\n", $loopedLines), $data, $loopVars) . PHP_EOL;
+						$replacement .= $this->evaluateInternal($baseDir, implode("\n", $loopedLines), $data, $loopVars) . PHP_EOL;
 
 						unset($data[$loopVarName]);
 					}
@@ -140,7 +142,7 @@ class TemplateRenderer
 
 					$template = $this->replaceFirstMatch($template, $loopWrapper, $replacement);
 				} else {
-					$replacement = $this->evaluateStatementDirectives($templateDirective, $basePath, $data, $loopVars);
+					$replacement = $this->evaluateStatementDirectives($templateDirective, $baseDir, $data, $loopVars);
 					$template = $this->replaceFirstMatch($template, $wrapper, $replacement);
 				}
 			}
@@ -157,7 +159,7 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	private function evaluateStatementDirectives(string $templateDirective, string $basePath, array &$data, array $loopVars): mixed
+	private function evaluateStatementDirectives(string $templateDirective, Directory $baseDir, array &$data, array $loopVars): mixed
 	{
 		if (str_starts_with($templateDirective, '$')) {
 			$varPath = substr($templateDirective, 1);
@@ -167,7 +169,7 @@ class TemplateRenderer
 		if (str_starts_with($templateDirective, 'include')) {
 			$includePath = substr($templateDirective, 8);
 			if (str_starts_with($includePath, '(')) {
-				$includePath = $this->evaluateExpression(trim($includePath), $basePath, $data, $loopVars);
+				$includePath = $this->evaluateExpression(trim($includePath), $baseDir, $data, $loopVars);
 			}
 
 			if (file_exists($includePath)) {
@@ -180,21 +182,21 @@ class TemplateRenderer
 		if (str_starts_with($templateDirective, 'import')) {
 			$expression = substr($templateDirective, 7);
 			if (str_starts_with($expression, '(')) {
-				$expression = $this->evaluateExpression(trim($expression), $basePath, $data, $loopVars);
+				$expression = $this->evaluateExpression(trim($expression), $baseDir, $data, $loopVars);
 			}
 
-			$importedPath = Path::join($basePath, $expression);
+			$importedFile = $baseDir->file($expression);
 
-			return $this->renderFile($importedPath, $data);
+			return $this->renderFile($importedFile, $data);
 		}
 
 		if (str_starts_with($templateDirective, 'load')) {
 			$expression = substr($templateDirective, 5);
 			if (str_starts_with($expression, '(')) {
-				$expression = $this->evaluateExpression(trim($expression), $basePath, $data, $loopVars);
+				$expression = $this->evaluateExpression(trim($expression), $baseDir, $data, $loopVars);
 			}
 
-			$loadedPath = Path::join($basePath, $expression);
+			$loadedPath = $baseDir->file($expression);
 
 			foreach ($this->loadData($loadedPath) as $key => $value) {
 				$data[$key] = $value;
@@ -206,7 +208,7 @@ class TemplateRenderer
 		if (str_starts_with($templateDirective, 'qualify')) {
 			$urlToQualify = substr($templateDirective, 8);
 			if (array_key_exists('version', $data)) {
-				$urlToQualify = '/' . $data['version'] . '/' . ltrim($urlToQualify, '/');
+				$urlToQualify = '/v/' . $data['version'] . '/' . ltrim($urlToQualify, '/');
 			}
 
 			return $urlToQualify;
@@ -214,7 +216,7 @@ class TemplateRenderer
 
 		if (str_starts_with($templateDirective, 'active')) {
 			$activePath = substr($templateDirective, 7);
-			$activePath = $this->evaluateStatementDirectives("qualify $activePath", $basePath, $data, $loopVars);
+			$activePath = $this->evaluateStatementDirectives("qualify $activePath", $baseDir, $data, $loopVars);
 			$currentPath = $this->request->getUrl()->path;
 
 			return $activePath === $currentPath;
@@ -224,7 +226,7 @@ class TemplateRenderer
 			$varAndValue = substr($templateDirective, 4);
 			[$varName, $value] = explode('=', $varAndValue, 2);
 			$varName = trim($varName, '$ ');
-			$value = $this->evaluateExpression(trim($value), $basePath, $data, $loopVars);
+			$value = $this->evaluateExpression(trim($value), $baseDir, $data, $loopVars);
 
 			$this->setDotPathValue($varName, $value, $data);
 
@@ -232,7 +234,7 @@ class TemplateRenderer
 		}
 
 		if (str_starts_with($templateDirective, '(')) {
-			return $this->evaluateExpression($templateDirective, $basePath, $data, $loopVars);
+			return $this->evaluateExpression($templateDirective, $baseDir, $data, $loopVars);
 		}
 
 		return null;
@@ -242,16 +244,24 @@ class TemplateRenderer
 	 * @noinspection TypeUnsafeComparisonInspection
 	 * @throws JsonException
 	 */
-	private function evaluateExpression(string $expression, string $basePath, array &$data, array $loopVars): mixed
+	private function evaluateExpression(string $expression, Directory $baseDir, array &$data, array $loopVars): mixed
 	{
-		preg_match('/\(([^()]*|(?R))\s(\+|-|\*|\/|%|\.|==|!=|\|\||&&|\?\??)\s([^()]*|(?R))\)/', $expression, $matches);
+		preg_match('/\((?<left>[^()]*\s|(?R)\s|\w+)(?:(?<op>\+|-|\*|\/|%|\.|==|!=|\|\||&&|\?\??))?\s(?<right>[^()]*|(?R))\)/', $expression, $matches);
+
 		if (empty($matches)) {
-			$value = $this->evaluateStatementDirectives(trim($expression, '()'), $basePath, $data, $loopVars);
-			return $value ?? $this->evaluateExpressionPart($expression, $basePath, $data, $loopVars);
+			$expressionWithoutParenthesis = preg_replace('#(^\(|\)$)#', '', $expression);
+			$value = $this->evaluateStatementDirectives($expressionWithoutParenthesis, $baseDir, $data, $loopVars);
+			return $value ?? $this->evaluateExpressionPart($expression, $baseDir, $data, $loopVars);
 		}
 
-		$left = $this->evaluateExpressionPart($matches[1], $basePath, $data, $loopVars);
-		$operator = match ($matches[2]) {
+		if (empty($matches['op'])) {
+			$expressionWithoutParenthesis = preg_replace('#(^\(|\)$)#', '', $matches['left'] . ' ' . $matches['right']);
+			$value = $this->evaluateStatementDirectives($expressionWithoutParenthesis, $baseDir, $data, $loopVars);
+			return $value ?? $this->evaluateExpressionPart($expressionWithoutParenthesis, $baseDir, $data, $loopVars);
+		}
+
+		$left = $this->evaluateExpressionPart(rtrim($matches['left']), $baseDir, $data, $loopVars);
+		$operator = match ($matches['op']) {
 			'+' => static fn($left, $right) => $left + $right,
 			'-' => static fn($left, $right) => $left - $right,
 			'*' => static fn($left, $right) => $left * $right,
@@ -266,7 +276,7 @@ class TemplateRenderer
 			'??' => static fn($left, $right) => $left ?? $right,
 			default => throw new RuntimeException('Unknown operator: ' . $matches[2]),
 		};
-		$right = $this->evaluateExpressionPart($matches[3], $basePath, $data, $loopVars);
+		$right = $this->evaluateExpressionPart($matches['right'], $baseDir, $data, $loopVars);
 
 		return $operator($left, $right);
 	}
@@ -274,10 +284,10 @@ class TemplateRenderer
 	/**
 	 * @throws JsonException
 	 */
-	private function evaluateExpressionPart(string $part, string $basePath, array $data, array $loopVars): mixed
+	private function evaluateExpressionPart(string $part, Directory $baseDir, array $data, array $loopVars): mixed
 	{
 		if (str_starts_with($part, '(')) {
-			return $this->evaluateExpression($part, $basePath, $data, $loopVars);
+			return $this->evaluateExpression($part, $baseDir, $data, $loopVars);
 		}
 
 		if (str_starts_with($part, '$')) {

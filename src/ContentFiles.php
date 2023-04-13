@@ -3,42 +3,46 @@ declare(strict_types=1);
 
 namespace Elephox\Docs;
 
+use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericOrderedEnumerable;
+use Elephox\Files\Directory;
+use Elephox\Files\File;
 use Elephox\Files\Path;
 use JsonException;
 use Parsedown;
 
-class ContentFiles
+readonly class ContentFiles
 {
 	public function __construct(
-		private readonly Parsedown $parsedown,
-		private readonly TemplateRenderer $templateRenderer,
+		private Parsedown $parsedown,
+		private TemplateRenderer $templateRenderer,
 	)
 	{
 		$this->parsedown->setSafeMode(false);
 	}
 
-	public static function findBestFit(string $version, string $path): null|string
+	public static function availableVersions(): GenericOrderedEnumerable
+	{
+		return (new Directory(Path::join(__DIR__, "..", "content", "v")))
+			->directories()
+			->select(fn (Directory $d) => $d->name())
+			->orderByDescending(fn (string $name) => $name);
+	}
+
+	public static function findBestFit(string $version, string $path): ?File
 	{
 		$path = rtrim($path, '/');
 
 		foreach (
 			[
-				$version,
-				'main',
-				'develop'
-			] as $versionDir
+				$path . '.md',
+				Path::join($path, 'index.md'),
+				$path,
+			] as $tryFile
 		) {
-			foreach (
-				[
-					$path,
-					$path . '.md',
-					Path::join($path, 'index.md')
-				] as $tryFile
-			) {
-				$contentFile = Path::join(__DIR__, "..", "content", "v", $versionDir, $tryFile);
-				if (is_file($contentFile)) {
-					return $contentFile;
-				}
+			$contentFile = new File(Path::join(__DIR__, "..", "content", "v", $version, $tryFile));
+			if ($contentFile->exists()) {
+				return $contentFile;
 			}
 		}
 
@@ -48,11 +52,11 @@ class ContentFiles
 	/**
 	 * @throws JsonException
 	 */
-	public function render(string $contentFilePath, array &$data): string
+	public function render(File $contentFile, array &$data): string
 	{
-		$basePath = dirname($contentFilePath);
+		$basePath = $contentFile->parent();
 
-		$content = file_get_contents($contentFilePath);
+		$content = $contentFile->contents();
 		$content = $this->templateRenderer->evaluate($basePath, $content, $data);
 		return $this->parsedown->text($content);
 	}
