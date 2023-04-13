@@ -36,10 +36,13 @@ readonly class Routes
 //
 //		return $this->handleContent($contentFile, ['version' => 'develop', 'branch' => 'develop', 'path' => $url], $pageRenderer);
 //	}
+	/**
+	 * @throws JsonException
+	 */
 	#[Get]
 	public function handleIndex(): ResponseBuilder
 	{
-		return Response::build()->redirect("/v/develop");
+		return $this->handleContent(ContentFiles::findBestFit("develop", "index"), ['version' => "develop", 'branch' => 'develop', 'path' => '']);
 	}
 
 	/**
