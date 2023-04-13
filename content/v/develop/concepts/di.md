@@ -5,7 +5,7 @@
   </div>
 </section>
 
-<!---{? set title = "Container @ Elephox" }-->
+<!---{? set title = "DI @ Elephox" }-->
 
 [toc]
 

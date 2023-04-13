@@ -15,4 +15,4 @@ There are a few concepts you should learn, before you dive deeper into Elephox:
 - Service [Container]s
 
 [Collections]: {?qualify:/concepts/collections}
-[Container]: {?qualify:/concepts/container}
+[Container]: {?qualify:/concepts/di}
