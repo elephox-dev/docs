@@ -3,8 +3,8 @@ version: '3'
 services:
     elephox:
         build:
-            context: ./docker
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: docker/Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
         extra_hosts:
