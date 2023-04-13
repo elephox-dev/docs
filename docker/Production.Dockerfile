@@ -42,14 +42,14 @@ RUN setcap "cap_net_bind_service=+ep" /usr/local/bin/php
 RUN groupadd --force -g $WWWGROUP plane
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 plane
 
-COPY docker/start-container /usr/local/bin/start-container
+COPY docker/start-container.sh /usr/local/bin/start-container.sh
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/php.ini $PHP_INI_DIR/conf.d/99-plane.ini
-RUN chmod +x /usr/local/bin/start-container
+RUN chmod +x /usr/local/bin/start-container.sh
 
 EXPOSE 8000
 
 COPY . /var/www/html/
 RUN cd /var/www/html/ && composer install --no-dev --no-interaction
 
-ENTRYPOINT ["start-container"]
+ENTRYPOINT ["start-container.sh"]
