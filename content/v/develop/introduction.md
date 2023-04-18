@@ -33,39 +33,48 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Db;
+use App\Models\User;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
+use Elephox\Http\ResponseCode;
+use Elephox\Web\Routing\Attribute\Controller;
 use Elephox\Web\Routing\Attribute\Http\Delete;
 use Elephox\Web\Routing\Attribute\Http\Get;
 
 #[Controller('blog')]
 readonly class BlogController
 {
-    public function __construct(
-        private Db $myDb;
-    ) {}
+	public function __construct(private PostsRepository $posts) {}
 
-    #[Get('posts')]
-    public function getPosts(): ResponseBuilder
-    {
-        $posts = $this->myDb->get('posts')->toArray();
+	#[Get('posts')]
+	public function getPosts(): ResponseBuilder
+	{
+		$posts = $this->posts->getAll()->toArray();
 
-        return Response::build()->ok()->jsonBody($posts);
-    }
+		return Response::build()->ok()->jsonBody($posts);
+	}
 
-    #[Delete('posts/{id:int}')]
-    public function deletePost(int $id): ResponseBuilder
-    {
-        // TODO: authorization
+	#[Delete('posts/{id:int}')]
+	public function deletePost(int $id, ?User $user): ResponseBuilder
+	{
+		$post = $this->posts->getOne($id);
+		if ($post === null) {
+			return Response::build()->notFound();
+		}
 
-        $this->myDb->delete('posts', $id);
+		if ($user === null || !$user->canDelete($post)) {
+			return Response::build()->responseCode(ResponseCode::Unauthorized);
+		}
 
-        return Response::build()->ok();
-    }
+		$this->posts->delete($post->id);
+
+		return Response::build()->ok();
+	}
 }
 ```
 
-It demonstrates how a controller can be used to handle HTTP requests and access a database through a dependency injected object.
+It demonstrates how a controller can be used to handle HTTP requests and access a repository through a dependency injected object.
 
 It also uses Elephox's attribute routing system, which is a convenient way to map routes to controller actions.
 The `#[Get]` and `#[Delete]` attributes define the HTTP method and the URL pattern for each method, respectively.
@@ -103,7 +112,8 @@ class EchoCommand implements CommandHandler
 
 	public function handle(CommandInvocation $command): int|null
 	{
-		for ($i = 0; $i < $command->options->get('repeat')->value; $i++) {
+		$repeats = (int)$command->options->get('repeat')->value;
+		for ($i = 0; $i < $repeats; $i++) {
 			echo $command->arguments->get('message')->value . PHP_EOL;
 		}
 
